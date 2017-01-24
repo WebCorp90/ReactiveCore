@@ -12,11 +12,32 @@ namespace ReactiveCore
     public class ReactiveObject : IReactiveObject, IReactiveNotifyPropertyChanged<IReactiveObject>
     {
         #region events
+        /* public event PropertyChangingEventHandler PropertyChanging;
+         public event PropertyChangedEventHandler PropertyChanged;
+
+         void IReactiveObject.RaisePropertyChanging(PropertyChangingEventArgs args) => this.PropertyChanging(this, args);
+         void IReactiveObject.RaisePropertyChanged(PropertyChangedEventArgs args) => this.PropertyChanged(this, args);*/
         public event PropertyChangingEventHandler PropertyChanging;
+
+        void IReactiveObject.RaisePropertyChanging(PropertyChangingEventArgs args)
+        {
+            var handler = this.PropertyChanging;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
-        void IReactiveObject.RaisePropertyChanging(PropertyChangingEventArgs args) => this?.PropertyChanging(this, args);
-        void IReactiveObject.RaisePropertyChanged(PropertyChangedEventArgs args) => this?.PropertyChanged(this, args);
+        void IReactiveObject.RaisePropertyChanged(PropertyChangedEventArgs args)
+        {
+            var handler = this.PropertyChanged;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
 
         #endregion
 
