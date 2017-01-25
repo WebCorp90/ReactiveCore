@@ -31,6 +31,9 @@ namespace ReactiveCore.Test
         public string Name { get; set ;  }
         [Reactive]
         public string Category { get; set; }
+
+       
+        public string Temp { get;  }
     }
 }
 

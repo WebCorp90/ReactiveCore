@@ -3,29 +3,17 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
-using System.Diagnostics;
 
 namespace PropertyChangedCore.Fody
 {
-    /// <summary>
-    /// Weaver that replaces properties marked with `[DataMember]` on subclasses of `ReactiveObject` with an 
-    /// implementation that invokes `RaisePropertyChanged` as is required for reaciveui.
-    /// </summary>
-    internal class ReactivePropertyWeaver : Module
+    internal class ReactiveDependencyPropertyModule : Module
     {
-        
-
-        public ReactivePropertyWeaver(PropertyChangedCoreWeaver module):base(module)
+        public ReactiveDependencyPropertyModule(PropertyChangedCoreWeaver module):base(module)
         {
 
         }
-
         public override void Execute()
         {
-            Weaver.LogInfo($"{nameof( ReactivePropertyWeaver)}");
-#if DEBUG
-            if (Debugger.IsAttached) Debugger.Break();
-#endif
             var reactiveCore = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (reactiveCore == null)
             {
@@ -33,27 +21,27 @@ namespace PropertyChangedCore.Fody
                 return;
             }
             Weaver.LogInfo($"{reactiveCore.Name} {reactiveCore.Version}");
+
             var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.HELPERS_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (helpers == null)
             {
-                Weaver.LogInfo($"Could not find assembly: ReactiveCore.Helpers ({  string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) }");
+                Weaver.LogInfo($"Could not find assembly: {PropertyChangedCoreWeaver.HELPERS_ASSEMBLY} ({ string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) })");
                 return;
             }
             Weaver.LogInfo($"{helpers.Name} {helpers.Version}");
-            var reactiveObject = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_OBJECT, Weaver.ModuleDefinition, reactiveCore);
+            var reactiveObject = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.IREACTIVE_OBJECT, reactiveCore);
             var targetTypes = Weaver.ModuleDefinition.GetAllTypes().Where(x => x.BaseType != null && reactiveObject.IsAssignableFrom(x.BaseType)).ToArray();
-            Weaver.LogInfo(string.Join<TypeDefinition>(",", targetTypes));
             var reactiveObjectExtensions = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS, Weaver.ModuleDefinition, reactiveCore).Resolve();
             if (reactiveObjectExtensions == null)
-                throw new Exception("reactiveObjectExtensions is null");
+                throw new Exception($"{PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS} is null");
 
             var raiseAndSetIfChangedMethod = Weaver.ModuleDefinition.Import(reactiveObjectExtensions.Methods.Single(x => x.Name == PropertyChangedCoreWeaver.RAISE_AND_SET_IF_CHANGE_METHOD));
             if (raiseAndSetIfChangedMethod == null)
-                throw new Exception("raiseAndSetIfChangedMethod is null");
+                throw new Exception($"{PropertyChangedCoreWeaver.RAISE_AND_SET_IF_CHANGE_METHOD} is null");
 
-            var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY, "ReactiveAttribute", helpers);
+            var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE, helpers);
             if (reactiveAttribute == null)
-                throw new Exception("reactiveAttribute is null");
+                throw new Exception($"{PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE} is null");
 
             foreach (var targetType in targetTypes)
             {

@@ -3,17 +3,29 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+using System.Diagnostics;
 
 namespace PropertyChangedCore.Fody
 {
-    internal class ReactiveDependencyPropertyWeaver : Module
+    /// <summary>
+    /// Weaver that replaces properties marked with `[DataMember]` on subclasses of `ReactiveObject` with an 
+    /// implementation that invokes `RaisePropertyChanged` as is required for reaciveui.
+    /// </summary>
+    internal class ReactivePropertyModule : Module
     {
-        public ReactiveDependencyPropertyWeaver(PropertyChangedCoreWeaver module):base(module)
+        
+
+        public ReactivePropertyModule(PropertyChangedCoreWeaver module):base(module)
         {
 
         }
+
         public override void Execute()
         {
+            Weaver.LogInfo($"{nameof( ReactivePropertyModule)}");
+#if DEBUG
+            if (Debugger.IsAttached) Debugger.Break();
+#endif
             var reactiveCore = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (reactiveCore == null)
             {
@@ -21,27 +33,27 @@ namespace PropertyChangedCore.Fody
                 return;
             }
             Weaver.LogInfo($"{reactiveCore.Name} {reactiveCore.Version}");
-
             var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.HELPERS_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (helpers == null)
             {
-                Weaver.LogInfo("Could not find assembly: ReactiveCore.Helpers (" + string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) + ")");
+                Weaver.LogInfo($"Could not find assembly: {PropertyChangedCoreWeaver.HELPERS_ASSEMBLY} ({  string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) }");
                 return;
             }
             Weaver.LogInfo($"{helpers.Name} {helpers.Version}");
-            var reactiveObject = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.IREACTIVE_OBJECT, reactiveCore);
+            var reactiveObject = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_OBJECT, Weaver.ModuleDefinition, reactiveCore);
             var targetTypes = Weaver.ModuleDefinition.GetAllTypes().Where(x => x.BaseType != null && reactiveObject.IsAssignableFrom(x.BaseType)).ToArray();
+            Weaver.LogInfo(string.Join<TypeDefinition>(",", targetTypes));
             var reactiveObjectExtensions = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS, Weaver.ModuleDefinition, reactiveCore).Resolve();
             if (reactiveObjectExtensions == null)
-                throw new Exception("reactiveObjectExtensions is null");
+                throw new Exception($"{PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS} is null");
 
             var raiseAndSetIfChangedMethod = Weaver.ModuleDefinition.Import(reactiveObjectExtensions.Methods.Single(x => x.Name == PropertyChangedCoreWeaver.RAISE_AND_SET_IF_CHANGE_METHOD));
             if (raiseAndSetIfChangedMethod == null)
-                throw new Exception("raiseAndSetIfChangedMethod is null");
+                throw new Exception($"{PropertyChangedCoreWeaver.RAISE_AND_SET_IF_CHANGE_METHOD} is null");
 
-            var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE, helpers);
+            var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY,  PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE , helpers);
             if (reactiveAttribute == null)
-                throw new Exception("reactiveAttribute is null");
+                throw new Exception($"{PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE} is null");
 
             foreach (var targetType in targetTypes)
             {
@@ -54,7 +66,7 @@ namespace PropertyChangedCore.Fody
                     }
 
                     // Declare a field to store the property value
-                    var field = new FieldDefinition("$" + property.Name, FieldAttributes.Private, property.PropertyType);
+                    var field = new FieldDefinition($"${property.Name}"  , FieldAttributes.Private, property.PropertyType);
                     targetType.Fields.Add(field);
 
                     // Remove old field (the generated backing field for the auto property)
@@ -101,7 +113,7 @@ namespace PropertyChangedCore.Fody
                     // Build out the setter which fires the RaiseAndSetIfChanged method
                     if (property.SetMethod == null)
                     {
-                        throw new Exception("[Reactive] is decorating " + property.DeclaringType.FullName + "." + property.Name + ", but the property has no setter so there would be nothing to react to.  Consider removing the attribute.");
+                        throw new Exception($"[{PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE.Replace("Attribute","")}] is decorating { property.DeclaringType.FullName}.{property.Name} , but the property has no setter so there would be nothing to react to.  Consider removing the attribute.");
                     }
                     property.SetMethod.Body = new MethodBody(property.SetMethod);
                     property.SetMethod.Body.Emit(il =>

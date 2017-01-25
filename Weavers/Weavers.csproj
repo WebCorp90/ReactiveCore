@@ -60,17 +60,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CecilExtensions.cs" />
-    <Compile Include="Helpers\ObservableAsPropertyAttribute.cs" />
-    <Compile Include="Helpers\ObservableAsPropertyExtensions.cs" />
-    <Compile Include="Helpers\ReactiveAttribute.cs" />
-    <Compile Include="Helpers\ReactiveDependencyAttribute.cs" />
     <Compile Include="IExecutable.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="PropertyChangedCoreWeaver.cs" />
-    <Compile Include="ObservableAsPropertyWeaver.cs" />
+    <Compile Include="ObservableAsPropertyModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReactiveDependencyPropertyWeaver.cs" />
-    <Compile Include="ReactivePropertyWeaver.cs" />
+    <Compile Include="ReactiveDependencyPropertyModule.cs" />
+    <Compile Include="ReactivePropertyModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

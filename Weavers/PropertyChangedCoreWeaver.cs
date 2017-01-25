@@ -35,9 +35,9 @@ namespace PropertyChangedCore.Fody
         }
         public void Execute()
         {
-            new ReactivePropertyWeaver(this).Execute();
-            new ObservableAsPropertyWeaver(this).Execute();
-            new ReactiveDependencyPropertyWeaver(this).Execute();
+            new ReactivePropertyModule(this).Execute();
+            new ObservableAsPropertyModule(this).Execute();
+            new ReactiveDependencyPropertyModule(this).Execute();
         }
     }
 }

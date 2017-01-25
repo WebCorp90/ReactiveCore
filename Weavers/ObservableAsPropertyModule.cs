@@ -7,9 +7,9 @@ using Mono.Cecil.Rocks;
 
 namespace PropertyChangedCore.Fody
 {
-    internal class ObservableAsPropertyWeaver: Module
+    internal class ObservableAsPropertyModule: Module
     {
-        public ObservableAsPropertyWeaver(PropertyChangedCoreWeaver module):base(module)
+        public ObservableAsPropertyModule(PropertyChangedCoreWeaver module):base(module)
         {
 
         }
@@ -27,7 +27,7 @@ namespace PropertyChangedCore.Fody
             var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.HELPERS_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (helpers == null)
             {
-                Weaver.LogInfo("Could not find assembly: ReactiveCore.Helpers (" + string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) + ")");
+                Weaver.LogInfo($"Could not find assembly:{PropertyChangedCoreWeaver.HELPERS_ASSEMBLY} ({ string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) })");
                 return;
             }
             Weaver.LogInfo($"{helpers.Name} {helpers.Version}");
