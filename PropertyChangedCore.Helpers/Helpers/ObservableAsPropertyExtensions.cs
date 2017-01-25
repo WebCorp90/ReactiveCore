@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-namespace PropertyChangedCore.Fody.Helpers
+namespace PropertyChangedCore.Helpers
 {
     public static class ObservableAsPropertyExtensions
     {

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PropertyChangedCore.Fody.Helpers
+namespace PropertyChangedCore.Helpers
 {
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
     public class ObservableAsPropertyAttribute : Attribute

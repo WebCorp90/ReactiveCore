@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PropertyChangedCore.Fody.Helpers
+namespace PropertyChangedCore.Helpers
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class ReactiveAttribute : Attribute

@@ -111,15 +111,28 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CompatMixins.cs" />
+    <Compile Include="DefaultPropertyBinding.cs" />
+    <Compile Include="ExpressionMixins.cs" />
+    <Compile Include="ExpressionRewriter.cs" />
     <Compile Include="Interfaces.cs" />
     <Compile Include="IReactiveObject.cs" />
+    <Compile Include="ObservableAsPropertyHelper.cs" />
+    <Compile Include="ObservedChangedMixin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReactiveCoreApp.cs" />
     <Compile Include="ReactiveObject.cs" />
+    <Compile Include="Reflection.cs" />
     <Compile Include="ScheduledSubject.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PropertyChangedCore.Helpers\PropertyChangedCore.Helpers.csproj">
+      <Project>{85ac958c-0c88-45c6-b4db-395a1423404e}</Project>
+      <Name>PropertyChangedCore.Helpers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

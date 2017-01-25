@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+/*
 namespace PropertyChangedCore.Fody.Helpers
 {
     [AttributeUsage(AttributeTargets.Property)]
@@ -27,3 +27,4 @@ namespace PropertyChangedCore.Fody.Helpers
         public string TargetProperty { get; set; }
     }
 }
+*/

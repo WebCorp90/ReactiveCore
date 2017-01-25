@@ -18,6 +18,7 @@
     <TestProjectType>UnitTest</TestProjectType>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +71,7 @@
       <HintPath>..\packages\Rx-XAML.2.2.5\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <Choose>
@@ -96,6 +98,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PropertyChangedCore.Helpers\PropertyChangedCore.Helpers.csproj">
+      <Project>{85ac958c-0c88-45c6-b4db-395a1423404e}</Project>
+      <Name>PropertyChangedCore.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReactiveCore\ReactiveCore.csproj">
       <Project>{21e00f1e-a1fc-4f30-8af2-c1c357b5122c}</Project>
       <Name>ReactiveCore</Name>

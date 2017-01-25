@@ -20,14 +20,28 @@ namespace ReactiveCore.Test
 
 namespace ReactiveCore.Test
 {
+    using PropertyChangedCore.Helpers;
     using ReactiveCore;
-    [ImplementPropertyChanged]
+    using System.Runtime.Serialization;
+
+
     public class BlogCore :   ReactiveObject
     {
-        string _name;
-        public string Name { get { return _name; } set { this.RaiseAndSetIfChanged(ref _name, value); } }
+        [Reactive]
+        public string Name { get; set ;  }
+        [Reactive]
+        public string Category { get; set; }
+    }
+}
 
-        string _cat;
-        public string Category { get { return _cat; } set { this.RaiseAndSetIfChanged(ref _cat, value); } }
+namespace ReactiveCore.Test
+{
+    [ImplementPropertyChanged]
+    public class BlogStd 
+    {
+
+        public string Name { get; set; }
+
+        public string Category { get; set; }
     }
 }

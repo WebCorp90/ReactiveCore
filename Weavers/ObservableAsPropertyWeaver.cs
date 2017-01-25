@@ -9,36 +9,36 @@ namespace PropertyChangedCore.Fody
 {
     internal class ObservableAsPropertyWeaver: Module
     {
-        public ObservableAsPropertyWeaver(ModuleWeaver module):base(module)
+        public ObservableAsPropertyWeaver(PropertyChangedCoreWeaver module):base(module)
         {
 
         }
 
         public override void Execute()
         {
-            var reactiveCore = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == ModuleWeaver.REACTIVECORE_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
+            var reactiveCore = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (reactiveCore == null)
             {
-                Weaver.LogInfo($"Could not find assembly: {ModuleWeaver.REACTIVECORE_ASSEMBLY} ({ string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) })");
+                Weaver.LogInfo($"Could not find assembly: {PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY} ({ string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) })");
                 return;
             }
             Weaver.LogInfo($"{reactiveCore.Name} {reactiveCore.Version}");
 
-            /*var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == "ReactiveUI.Fody.Helpers").OrderByDescending(x => x.Version).FirstOrDefault();
+            var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.HELPERS_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (helpers == null)
             {
-                Weaver.LogInfo("Could not find assembly: ReactiveUI.Fody.Helpers (" + string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) + ")");
+                Weaver.LogInfo("Could not find assembly: ReactiveCore.Helpers (" + string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) + ")");
                 return;
             }
-            Weaver.LogInfo($"{helpers.Name} {helpers.Version}");*/
+            Weaver.LogInfo($"{helpers.Name} {helpers.Version}");
 
-            var reactiveObject = Weaver.ModuleDefinition.FindType(ModuleWeaver.REACTIVECORE_ASSEMBLY, ModuleWeaver.REACTIVE_OBJECT, reactiveCore);
+            var reactiveObject = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_OBJECT, reactiveCore);
 
             // The types we will scan are subclasses of ReactiveObject
             var targetTypes = Weaver.ModuleDefinition.GetAllTypes().Where(x => x.BaseType != null && reactiveObject.IsAssignableFrom(x.BaseType));
 
-            var observableAsPropertyHelper = Weaver.ModuleDefinition.FindType(ModuleWeaver.REACTIVECORE_ASSEMBLY, "ObservableAsPropertyHelper`1", reactiveCore, "T");
-            var observableAsPropertyAttribute = Weaver.ModuleDefinition.FindType(ModuleWeaver.HELPERS, "ObservableAsPropertyAttribute", reactiveCore);
+            var observableAsPropertyHelper = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, "ObservableAsPropertyHelper`1", reactiveCore, "T");
+            var observableAsPropertyAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY, PropertyChangedCoreWeaver.OBSERVABLE_AS_PROPERTY_ATTRIBUTE, helpers);
             var observableAsPropertyHelperGetValue = Weaver.ModuleDefinition.Import(observableAsPropertyHelper.Resolve().Properties.Single(x => x.Name == "Value").GetMethod);
             var exceptionType = Weaver.ModuleDefinition.Import(typeof(Exception));
             var exceptionConstructor = Weaver.ModuleDefinition.Import(exceptionType.Resolve().GetConstructors().Single(x => x.Parameters.Count == 1));

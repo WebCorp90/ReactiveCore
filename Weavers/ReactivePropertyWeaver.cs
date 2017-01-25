@@ -3,43 +3,55 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
+using System.Diagnostics;
 
 namespace PropertyChangedCore.Fody
 {
-    internal class ReactiveDependencyPropertyWeaver : Module
+    /// <summary>
+    /// Weaver that replaces properties marked with `[DataMember]` on subclasses of `ReactiveObject` with an 
+    /// implementation that invokes `RaisePropertyChanged` as is required for reaciveui.
+    /// </summary>
+    internal class ReactivePropertyWeaver : Module
     {
-        public ReactiveDependencyPropertyWeaver(ModuleWeaver module):base(module)
+        
+
+        public ReactivePropertyWeaver(PropertyChangedCoreWeaver module):base(module)
         {
 
         }
+
         public override void Execute()
         {
-            var reactiveCore = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == ModuleWeaver.REACTIVECORE_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
+            Weaver.LogInfo($"{nameof( ReactivePropertyWeaver)}");
+#if DEBUG
+            if (Debugger.IsAttached) Debugger.Break();
+#endif
+            var reactiveCore = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (reactiveCore == null)
             {
-                Weaver.LogInfo($"Could not find assembly: {ModuleWeaver.REACTIVECORE_ASSEMBLY} ({ string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) })");
+                Weaver.LogInfo($"Could not find assembly: {PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY} ({ string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) })");
                 return;
             }
             Weaver.LogInfo($"{reactiveCore.Name} {reactiveCore.Version}");
-
-            /*var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == "ReactiveUI.Fody.Helpers").OrderByDescending(x => x.Version).FirstOrDefault();
+            var helpers = Weaver.ModuleDefinition.AssemblyReferences.Where(x => x.Name == PropertyChangedCoreWeaver.HELPERS_ASSEMBLY).OrderByDescending(x => x.Version).FirstOrDefault();
             if (helpers == null)
             {
-                Weaver.LogInfo("Could not find assembly: ReactiveUI.Fody.Helpers (" + string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) + ")");
+                Weaver.LogInfo($"Could not find assembly: ReactiveCore.Helpers ({  string.Join(", ", Weaver.ModuleDefinition.AssemblyReferences.Select(x => x.Name)) }");
                 return;
             }
-            Weaver.LogInfo($"{helpers.Name} {helpers.Version}");*/
-            var reactiveObject = Weaver.ModuleDefinition.FindType(ModuleWeaver.REACTIVECORE_ASSEMBLY, ModuleWeaver.IREACTIVE_OBJECT, reactiveCore);
+            Weaver.LogInfo($"{helpers.Name} {helpers.Version}");
+            var reactiveObject = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_OBJECT, Weaver.ModuleDefinition, reactiveCore);
             var targetTypes = Weaver.ModuleDefinition.GetAllTypes().Where(x => x.BaseType != null && reactiveObject.IsAssignableFrom(x.BaseType)).ToArray();
-            var reactiveObjectExtensions = new TypeReference(ModuleWeaver.REACTIVECORE_ASSEMBLY, ModuleWeaver.IREACTIVE_OBJECT_EXTENTIONS, Weaver.ModuleDefinition, reactiveCore).Resolve();
+            Weaver.LogInfo(string.Join<TypeDefinition>(",", targetTypes));
+            var reactiveObjectExtensions = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS, Weaver.ModuleDefinition, reactiveCore).Resolve();
             if (reactiveObjectExtensions == null)
                 throw new Exception("reactiveObjectExtensions is null");
 
-            var raiseAndSetIfChangedMethod = Weaver.ModuleDefinition.Import(reactiveObjectExtensions.Methods.Single(x => x.Name == ModuleWeaver.RAISE_AND_SET_IF_CHANGE_METHOD));
+            var raiseAndSetIfChangedMethod = Weaver.ModuleDefinition.Import(reactiveObjectExtensions.Methods.Single(x => x.Name == PropertyChangedCoreWeaver.RAISE_AND_SET_IF_CHANGE_METHOD));
             if (raiseAndSetIfChangedMethod == null)
                 throw new Exception("raiseAndSetIfChangedMethod is null");
 
-            var reactiveAttribute = Weaver.ModuleDefinition.FindType(ModuleWeaver.HELPERS, ModuleWeaver.REACTIVE_ATTRIBUTE, reactiveCore);
+            var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY, "ReactiveAttribute", helpers);
             if (reactiveAttribute == null)
                 throw new Exception("reactiveAttribute is null");
 

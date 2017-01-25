@@ -3,16 +3,16 @@ using System;
 
 namespace PropertyChangedCore.Fody
 {
-    public partial class ModuleWeaver : IExecutable
+    public partial class PropertyChangedCoreWeaver : IExecutable
     {
         public const string REACTIVECORE_ASSEMBLY = "ReactiveCore";
-        public const string HELPERS= "PropertyChangedCore.Fody.Helpers";
+        public const string HELPERS_ASSEMBLY= "PropertyChangedCore.Helpers";
         public const string IREACTIVE_OBJECT = "IReactiveObject";
         public const string REACTIVE_OBJECT = "ReactiveObject";
         public const string IREACTIVE_OBJECT_EXTENTIONS = "IReactiveObjectExtensions";
         public const string RAISE_AND_SET_IF_CHANGE_METHOD = "RaiseAndSetIfChanged";
         public const string REACTIVE_ATTRIBUTE = "ReactiveAttribute";
-
+        public const string OBSERVABLE_AS_PROPERTY_ATTRIBUTE = " ObservableAsPropertyAttribute";
         public ModuleDefinition ModuleDefinition { get; set; }
          
         // Will log an MessageImportance.High message to MSBuild. 
@@ -25,15 +25,17 @@ namespace PropertyChangedCore.Fody
 
         public Action<string> LogDebug { get;  set; }
 
-        public ModuleWeaver()
+        public PropertyChangedCoreWeaver()
         {
-            LogWarning = s => { };
+            
             LogInfo = s => { };
+            LogError = s =>{ };
+            LogWarning = s => { };
             LogDebug = s => { };
         }
         public void Execute()
         {
-            new ReactiveUIPropertyWeaver(this).Execute();
+            new ReactivePropertyWeaver(this).Execute();
             new ObservableAsPropertyWeaver(this).Execute();
             new ReactiveDependencyPropertyWeaver(this).Execute();
         }

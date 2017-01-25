@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Reactive;
 using System.Reactive.Concurrency;
 using Splat;
+using System.Runtime.CompilerServices;
 
 namespace ReactiveCore
 {
@@ -59,6 +60,12 @@ namespace ReactiveCore
                     _MainThreadScheduler = value;
                 }
             }
+        }
+
+        [MethodImpl(MethodImplOptions.NoOptimization)]
+        internal static void EnsureInitialized()
+        {
+            // NB: This method only exists to invoke the static constructor
         }
     }
 }
