@@ -7,7 +7,7 @@ namespace ReactiveCore.Test
     [TestClass]
     public class TestReactiveUI
     {
-        [TestMethod]
+      /*  [TestMethod]
         public void TestMethod1()
         {
             BlogUI b = new BlogUI();
@@ -22,6 +22,6 @@ namespace ReactiveCore.Test
             b.Category = "tiit";
 
 
-        }
+        }*/
     }
 }

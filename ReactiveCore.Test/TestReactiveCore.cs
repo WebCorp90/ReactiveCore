@@ -12,7 +12,7 @@ namespace ReactiveCore.Test
         {
             BlogCore b = new BlogCore();
 
-            b.Changed.Subscribe(e => {
+           b.Changed.Subscribe(e => {
                 if (Debugger.IsAttached) Debugger.Break();
                 Trace.WriteLine($"{e.PropertyName} has changed ");
             });

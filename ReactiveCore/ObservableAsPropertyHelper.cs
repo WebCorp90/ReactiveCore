@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using Splat;
+//using Splat;
 using System.Reactive.Disposables;
 
 namespace ReactiveCore
@@ -18,7 +18,7 @@ namespace ReactiveCore
     /// notifications. This class can be created directly, but is more often created via the
     /// ToProperty and ObservableToProperty extension methods.
     /// </summary>
-    public sealed class ObservableAsPropertyHelper<T> :  IDisposable, IEnableLogger
+    public sealed class ObservableAsPropertyHelper<T> :  IDisposable//, IEnableLogger
     {
         T _lastValue;
         readonly IConnectableObservable<T> _source;
@@ -91,10 +91,10 @@ namespace ReactiveCore
             subj.OnNext(initialValue);
             _source = observable.DistinctUntilChanged().Multicast(subj);
 
-            if (ModeDetector.InUnitTestRunner())
+           /* if (ModeDetector.InUnitTestRunner())
             {
                 _inner = _source.Connect();
-            }
+            }*/
         }
 
         /// <summary>

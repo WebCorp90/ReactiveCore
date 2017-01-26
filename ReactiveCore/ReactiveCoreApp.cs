@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reactive;
 using System.Reactive.Concurrency;
-using Splat;
+//using Splat;
 using System.Runtime.CompilerServices;
 
 namespace ReactiveCore
@@ -50,15 +50,15 @@ namespace ReactiveCore
                 // own TestScheduler, and if this wasn't ThreadStatic, they would
                 // stomp on each other, causing test cases to randomly fail,
                 // then pass when you rerun them.
-                if (ModeDetector.InUnitTestRunner())
+               /* if (ModeDetector.InUnitTestRunner())
                 {
                     _UnitTestMainThreadScheduler = value;
                     _MainThreadScheduler = _MainThreadScheduler ?? value;
                 }
                 else
-                {
+                {*/
                     _MainThreadScheduler = value;
-                }
+                //}
             }
         }
 

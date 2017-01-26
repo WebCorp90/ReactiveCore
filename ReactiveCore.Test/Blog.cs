@@ -1,7 +1,7 @@
 ﻿
 using PropertyChanged;
 
-
+/*
 namespace ReactiveCore.Test
 {
     using ReactiveUI;
@@ -16,7 +16,7 @@ namespace ReactiveCore.Test
     }
 
    
-}
+}*/
 
 namespace ReactiveCore.Test
 {

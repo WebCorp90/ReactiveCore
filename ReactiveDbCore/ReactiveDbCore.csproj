@@ -186,7 +186,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="IDbContextTrigger.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IUnitOfWork.cs" />
     <Compile Include="ObjectMixins.cs" />
@@ -197,6 +197,10 @@
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PropertyChangedCore.Helpers\PropertyChangedCore.Helpers.csproj">
+      <Project>{85AC958C-0C88-45C6-B4DB-395A1423404E}</Project>
+      <Name>PropertyChangedCore.Helpers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReactiveCore\ReactiveCore.csproj">
       <Project>{21e00f1e-a1fc-4f30-8af2-c1c357b5122c}</Project>
       <Name>ReactiveCore</Name>
@@ -205,6 +209,9 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Triggers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

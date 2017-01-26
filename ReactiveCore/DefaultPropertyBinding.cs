@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using Splat;
+//using Splat;
 
 namespace ReactiveCore
 {

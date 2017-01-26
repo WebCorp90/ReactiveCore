@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Text;
-using Splat;
+//using Splat;
 
 namespace ReactiveCore
 {
@@ -201,11 +201,11 @@ namespace ReactiveCore
             return true;
         }
 
-        static readonly MemoizingMRUCache<string, Type> typeCache = new MemoizingMRUCache<string, Type>((type, _) => {
+      /*  static readonly MemoizingMRUCache<string, Type> typeCache = new MemoizingMRUCache<string, Type>((type, _) => {
             return Type.GetType(type, false);
-        }, 20);
+        }, 20);*/
 
-        public static Type ReallyFindType(string type, bool throwOnFailure)
+        /*public static Type ReallyFindType(string type, bool throwOnFailure)
         {
             lock (typeCache)
             {
@@ -213,7 +213,7 @@ namespace ReactiveCore
                 if (ret != null || !throwOnFailure) return ret;
                 throw new TypeLoadException();
             }
-        }
+        }*/
 
         public static Type GetEventArgsTypeForEvent(Type type, string eventName)
         {

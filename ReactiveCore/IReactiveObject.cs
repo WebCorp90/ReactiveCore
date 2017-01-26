@@ -7,7 +7,7 @@ using System.Threading;
 using System.Reactive.Disposables;
 using System.Diagnostics.Contracts;
 using System.ComponentModel;
-using Splat;
+//using Splat;
 using System.Collections.Generic;
 using System.Reactive;
 
@@ -126,13 +126,13 @@ namespace ReactiveCore
             s.raisePropertyChanged(propertyName);
         }
 
-        internal static IObservable<IReactivePropertyChangedEventArgs<TSender>> getChangedObservable<TSender>(this TSender This) where TSender : IReactiveObject
+        public static IObservable<IReactivePropertyChangedEventArgs<TSender>> getChangedObservable<TSender>(this TSender This) where TSender : IReactiveObject
         {
             var val = state.GetValue(This, key => (IExtensionState<IReactiveObject>)new ExtensionState<TSender>(This));
             return val.Changed.Cast<IReactivePropertyChangedEventArgs<TSender>>();
         }
 
-        internal static IObservable<IReactivePropertyChangedEventArgs<TSender>> getChangingObservable<TSender>(this TSender This) where TSender : IReactiveObject
+        public static IObservable<IReactivePropertyChangedEventArgs<TSender>> getChangingObservable<TSender>(this TSender This) where TSender : IReactiveObject
         {
             var val = state.GetValue(This, key => (IExtensionState<IReactiveObject>)new ExtensionState<TSender>(This));
             return val.Changing.Cast<IReactivePropertyChangedEventArgs<TSender>>();
