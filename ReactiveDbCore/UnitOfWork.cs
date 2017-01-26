@@ -8,7 +8,7 @@ using ReactiveCore;
 
 namespace ReactiveDbCore
 {
-    public class UnitOfWork<T> : IUnitOfWork<T> where T : DbContext
+   /* public class UnitOfWork<T> : IUnitOfWork<T> where T : DbContext
     {
         public UnitOfWork(T context)
         {
@@ -49,5 +49,5 @@ namespace ReactiveDbCore
             });
            
         }
-    }
+    }*/
 }
