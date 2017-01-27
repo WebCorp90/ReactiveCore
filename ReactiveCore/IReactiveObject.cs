@@ -15,8 +15,8 @@ namespace ReactiveCore
 {
     public interface IReactiveObject : INotifyPropertyChanged, INotifyPropertyChanging
     {
-        new event PropertyChangingEventHandler PropertyChanging;
-        new event PropertyChangedEventHandler PropertyChanged;
+        //new event PropertyChangingEventHandler PropertyChanging;
+       // new event PropertyChangedEventHandler PropertyChanged;
 
         void RaisePropertyChanging(PropertyChangingEventArgs args);
         void RaisePropertyChanged(PropertyChangedEventArgs args);

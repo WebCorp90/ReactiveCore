@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace ReactiveCore
 {
-    internal static class ReactiveCoreApp
+    public static class ReactiveCoreApp
     {
         static ReactiveCoreApp()
         {
