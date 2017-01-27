@@ -10,10 +10,7 @@ namespace ReactiveDbCore
 
     public interface IReactiveDbEventArgs
     {
-        /// <summary>
-        /// The name of the property that has changed on Sender.
-        /// </summary>
-        string PropertyName { get; }
+
 
         /// <summary>
         /// The object that has raised the change.
@@ -27,17 +24,12 @@ namespace ReactiveDbCore
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="propertyName">Name of the property.</param>
-        public ReactiveDbEventArgs(IReactiveDbObject sender, string propertyName)
+        public ReactiveDbEventArgs(IReactiveDbObject sender)
         {
             this.Sender = sender;
-            this.PropertyName = propertyName;
         }
 
-        public string PropertyName
-        {
-            get;private set;
-        }
-
+       
         /// <summary>
         ///
         /// </summary>

@@ -32,7 +32,7 @@ namespace ReactiveDbCore
         /// Represents an Observable that fires *after* a property is added
         /// </summary>
         [IgnoreDataMember]
-        public IObservable<IReactiveDbEventArgs> Added => ((IReactiveDbObject)this).getAddingObservable();
+        public IObservable<IReactiveDbEventArgs> Added => ((IReactiveDbObject)this).getAddedObservable();
 
 
 

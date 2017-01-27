@@ -28,7 +28,7 @@ namespace ReactiveCore
         public static IObserver<Exception> DefaultExceptionHandler { get; private set; }
 
         [ThreadStatic]
-        static IScheduler _UnitTestMainThreadScheduler;
+        static IScheduler _UnitTestMainThreadScheduler=null;
         static IScheduler _MainThreadScheduler;
 
         /// <summary>

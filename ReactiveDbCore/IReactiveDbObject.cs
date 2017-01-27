@@ -37,6 +37,20 @@ namespace ReactiveDbCore
             return val.Adding.Cast<IReactiveDbEventArgs>();
         }
 
+        internal static void RaiseDbEntityAdding(this IReactiveDbObject entity)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            s.raiseEntityAdding();
+        }
+
+        internal static void RaiseDbEntityAdded(this IReactiveDbObject entity)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            s.raiseEntityAdded();
+        }
+
         static IEnumerable<IReactiveDbEventArgs> dedup(IList<IReactiveDbEventArgs> batch)
         {
             if (batch.Count <= 1)
@@ -44,12 +58,12 @@ namespace ReactiveDbCore
                 return batch;
             }
 
-            var seen = new HashSet<string>();
+            var seen = new HashSet<IReactiveDbObject>();
             var unique = new LinkedList<IReactiveDbEventArgs>();
 
             for (int i = batch.Count - 1; i >= 0; i--)
             {
-                if (seen.Add(batch[i].PropertyName))
+                if (seen.Add(batch[i].Sender))
                 {
                     unique.AddFirst(batch[i]);
                 }
@@ -157,23 +171,23 @@ namespace ReactiveDbCore
                 });
             }
 
-            public void raiseEntityAdding(string propertyName)
+            public void raiseEntityAdding()
             {
                 if (!this.areChangeNotificationsEnabled())
                     return;
 
-                var adding = new ReactiveDbEventArgs(sender, propertyName);
+                var adding = new ReactiveDbEventArgs(sender);
                 sender.RaiseEntityAdding(adding);
 
                 this.notifyObservable(sender, adding, this.addingSubject);
             }
 
-            public void raiseEntityAdded(string propertyName)
+            public void raiseEntityAdded()
             {
                 if (!this.areChangeNotificationsEnabled())
                     return;
 
-                var added = new ReactiveDbEventArgs(sender, propertyName);
+                var added = new ReactiveDbEventArgs(sender);
                 sender.RaiseEntityAdding(added);
 
                 this.notifyObservable(sender, added, this.addedSubject);
@@ -199,9 +213,9 @@ namespace ReactiveDbCore
 
             IObservable<IReactiveDbEventArgs> Added { get; }
 
-            void raiseEntityAdding(string propertyName);
+            void raiseEntityAdding();
 
-            void raiseEntityAdded(string propertyName);
+            void raiseEntityAdded();
 
             IObservable<Exception> ThrownExceptions { get; }
 
