@@ -198,7 +198,9 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
@@ -206,8 +208,9 @@
     <Compile Include="Blog.cs" />
     <Compile Include="BlogContext.cs" />
     <Compile Include="BlogTestBase.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="TestDbContextEvents.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PropertyChangedCore.Helpers\PropertyChangedCore.Helpers.csproj">

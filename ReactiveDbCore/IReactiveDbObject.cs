@@ -16,25 +16,30 @@ namespace ReactiveDbCore
 {
     public interface IReactiveDbObject : IReactiveObject, INotifyEntityAdded, INotifyEntityAdding
     {
-        void RaiseEntityAdded(ReactiveDbEventArgs args);
-        void RaiseEntityAdding(ReactiveDbEventArgs args);
-
+        void RaiseEntityAdded(ReactiveDbObjectEventArgs args);
+        void RaiseEntityAdding(ReactiveDbObjectEventArgs args);
+        void RaiseEntityUpdating(ReactiveDbObjectEventArgs args);
+        void RaiseEntityUpdated(ReactiveDbObjectEventArgs args);
+        void RaiseEntityDeleting(ReactiveDbObjectEventArgs args);
+        void RaiseEntityDeleted(ReactiveDbObjectEventArgs args);
+        void RaiseEntityError(ReactiveDbObjectEventArgs args);
     }
 
     public static class IReactiveDbObjectExtensions
     {
         static ConditionalWeakTable<IReactiveDbObject, IExtensionState> state = new ConditionalWeakTable<IReactiveDbObject, IExtensionState>();
 
-        public static IObservable<IReactiveDbEventArgs> getAddedObservable(this IReactiveDbObject This) 
+        #region ADD
+        public static IObservable<IReactiveDbObjectEventArgs> getAddedObservable(this IReactiveDbObject This) 
         {
             var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
-            return val.Added.Cast<IReactiveDbEventArgs>();
+            return val.Added.Cast<IReactiveDbObjectEventArgs>();
         }
 
-        public static IObservable<IReactiveDbEventArgs> getAddingObservable(this IReactiveDbObject This) 
+        public static IObservable<IReactiveDbObjectEventArgs> getAddingObservable(this IReactiveDbObject This) 
         {
             var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
-            return val.Adding.Cast<IReactiveDbEventArgs>();
+            return val.Adding.Cast<IReactiveDbObjectEventArgs>();
         }
 
         internal static void RaiseDbEntityAdding(this IReactiveDbObject entity)
@@ -50,8 +55,86 @@ namespace ReactiveDbCore
 
             s.raiseEntityAdded();
         }
+        #endregion
 
-        static IEnumerable<IReactiveDbEventArgs> dedup(IList<IReactiveDbEventArgs> batch)
+        #region UPDATE
+        public static IObservable<IReactiveDbObjectEventArgs> getUpdatedObservable(this IReactiveDbObject This)
+        {
+            var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
+            return val.Updated.Cast<IReactiveDbObjectEventArgs>();
+        }
+
+        public static IObservable<IReactiveDbObjectEventArgs> getUpdatingObservable(this IReactiveDbObject This)
+        {
+            var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
+            return val.Updating.Cast<IReactiveDbObjectEventArgs>();
+        }
+
+        internal static void RaiseDbEntityUpdating(this IReactiveDbObject entity)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            s.raiseEntityUpdating();
+        }
+
+        internal static void RaiseDbEntityUpdated(this IReactiveDbObject entity)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            s.raiseEntityUpdated();
+        }
+        #endregion
+
+        #region DELETE
+        public static IObservable<IReactiveDbObjectEventArgs> getDeletedObservable(this IReactiveDbObject This)
+        {
+            var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
+            return val.Deleted.Cast<IReactiveDbObjectEventArgs>();
+        }
+
+        public static IObservable<IReactiveDbObjectEventArgs> getDeletingObservable(this IReactiveDbObject This)
+        {
+            var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
+            return val.Deleting.Cast<IReactiveDbObjectEventArgs>();
+        }
+
+        internal static void RaiseDbEntityDeleting(this IReactiveDbObject entity)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            s.raiseEntityDeleting();
+        }
+
+        internal static void RaiseDbEntityDeleted(this IReactiveDbObject entity)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            s.raiseEntityDeleted();
+        }
+        #endregion
+
+        #region ERROR
+        public static IObservable<IReactiveDbObjectEventArgs> getErrorObservable(this IReactiveDbObject This)
+        {
+            var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
+            return val.Error.Cast<IReactiveDbObjectEventArgs>();
+        }
+        internal static bool RaiseDbEntityError(this IReactiveDbObject entity,Exception ex)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
+
+            return s.raiseEntityError(ex);
+        }
+
+        internal static bool RaiseDbContextError(this ReactiveDbContext context,Exception ex)
+        {
+            if (context.ErrorCountSubscriber == 0) return false;
+            context.RaiseError(ex);
+            return true;
+        }
+        #endregion
+        #region internal helpers methods
+        static IEnumerable<IReactiveDbObjectEventArgs> dedup(IList<IReactiveDbObjectEventArgs> batch)
         {
             if (batch.Count <= 1)
             {
@@ -59,7 +142,7 @@ namespace ReactiveDbCore
             }
 
             var seen = new HashSet<IReactiveDbObject>();
-            var unique = new LinkedList<IReactiveDbEventArgs>();
+            var unique = new LinkedList<IReactiveDbObjectEventArgs>();
 
             for (int i = batch.Count - 1; i >= 0; i--)
             {
@@ -71,32 +154,59 @@ namespace ReactiveDbCore
 
             return unique;
         }
+        #endregion
 
+        #region internal Helpers Classes
         class ExtensionState : IExtensionState
         {
             long changeNotificationsSuppressed;
             long changeNotificationsDelayed;
-            ISubject<IReactiveDbEventArgs> addingSubject;
-            IObservable<IReactiveDbEventArgs> addingObservable;
-            ISubject<IReactiveDbEventArgs> addedSubject;
-            IObservable<IReactiveDbEventArgs> addedObservable;
-            ISubject<IReactiveDbEventArgs> fireChangedBatchSubject;
+            ISubject<IReactiveDbObjectEventArgs> addingSubject;
+            IObservable<IReactiveDbObjectEventArgs> addingObservable;
+            ISubject<IReactiveDbObjectEventArgs> addedSubject;
+            IObservable<IReactiveDbObjectEventArgs> addedObservable;
+            ISubject<IReactiveDbObjectEventArgs> updatingSubject;
+            IObservable<IReactiveDbObjectEventArgs> updatingObservable;
+            ISubject<IReactiveDbObjectEventArgs> updatedSubject;
+            IObservable<IReactiveDbObjectEventArgs> updatedObservable;
+            ISubject<IReactiveDbObjectEventArgs> deletingSubject;
+            IObservable<IReactiveDbObjectEventArgs> deletingObservable;
+            ISubject<IReactiveDbObjectEventArgs> deletedSubject;
+            IObservable<IReactiveDbObjectEventArgs> deletedObservable;
+            ISubject<IReactiveDbObjectEventArgs> errorSubject;
+            IObservable<IReactiveDbObjectEventArgs> errorObservable;
+
+            ISubject<IReactiveDbObjectEventArgs> fireChangedBatchSubject;
             ISubject<Exception> thrownExceptions;
             ISubject<Unit> startDelayNotifications;
 
             IReactiveDbObject sender;
 
+            Countable errorCountable;
+            IObservable<IReactiveDbObjectEventArgs> errorCount;
             /// <summary>
             /// Initializes a new instance of the <see cref="ExtensionState{TSender}"/> class.
             /// </summary>
             public ExtensionState(IReactiveDbObject sender)
             {
                 this.sender = sender;
-                this.addingSubject = new Subject<IReactiveDbEventArgs>();
-                this.addedSubject = new Subject<IReactiveDbEventArgs>();
+                this.addingSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.addedSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.updatingSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.updatedSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.deletingSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.deletedSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.errorSubject = new Subject<IReactiveDbObjectEventArgs>();
                 this.startDelayNotifications = new Subject<Unit>();
                 this.thrownExceptions = new ScheduledSubject<Exception>(Scheduler.Immediate, ReactiveCoreApp.DefaultExceptionHandler);
 
+               /* this.addedObservable = createObservable(ref addedSubject);
+                this.addingObservable = createObservable(ref addingSubject);
+                this.updatedObservable = createObservable(ref updatedSubject);
+                this.updatingObservable = createObservable(ref updatingSubject);
+                this.deletedObservable = createObservable(ref deletedSubject);
+                this.deletingObservable = createObservable(ref deletingSubject);*/
+                
                 this.addedObservable = addedSubject
                     .Buffer(
                         Observable.Merge(
@@ -116,32 +226,94 @@ namespace ReactiveDbCore
                     .SelectMany(batch => dedup(batch))
                     .Publish()
                     .RefCount();
+
+                this.updatedObservable = updatedSubject
+                    .Buffer(
+                        Observable.Merge(
+                            updatedSubject.Where(_ => !areChangeNotificationsDelayed()).Select(_ => Unit.Default),
+                            startDelayNotifications)
+                    )
+                    .SelectMany(batch => dedup(batch))
+                    .Publish()
+                    .RefCount();
+
+                this.updatingObservable = updatingSubject
+                    .Buffer(
+                        Observable.Merge(
+                            updatingSubject.Where(_ => !areChangeNotificationsDelayed()).Select(_ => Unit.Default),
+                            startDelayNotifications)
+                    )
+                    .SelectMany(batch => dedup(batch))
+                    .Publish()
+                    .RefCount();
+
+                this.deletedObservable = deletedSubject
+                    .Buffer(
+                        Observable.Merge(
+                            deletedSubject.Where(_ => !areChangeNotificationsDelayed()).Select(_ => Unit.Default),
+                            startDelayNotifications)
+                    )
+                    .SelectMany(batch => dedup(batch))
+                    .Publish()
+                    .RefCount();
+
+                this.deletingObservable = deletingSubject
+                    .Buffer(
+                        Observable.Merge(
+                            deletingSubject.Where(_ => !areChangeNotificationsDelayed()).Select(_ => Unit.Default),
+                            startDelayNotifications)
+                    )
+                    .SelectMany(batch => dedup(batch))
+                    .Publish()
+                    .RefCount();
+                
+                this.errorObservable = errorSubject
+                    .Buffer(
+                        Observable.Merge(
+                            errorSubject.Where(_ => !areChangeNotificationsDelayed()).Select(_ => Unit.Default),
+                            startDelayNotifications)
+                    )
+                    .SelectMany(batch => dedup(batch))
+                    .Publish()
+                    .RefCount();
+                this.errorCountable = new Countable();
+                this.errorObservable = this.errorCountable.GetCountable(this.errorObservable);
+
             }
 
-            public IObservable<IReactiveDbEventArgs> Adding
+          /*  private IObservable<IReactiveDbEventArgs> createObservable(ref ISubject<IReactiveDbEventArgs> subject)
             {
-                get { return this.addingObservable; }
-            }
+                return subject.Buffer(
+                        Observable.Merge(
+                            addingSubject.Where(_ => !areChangeNotificationsDelayed()).Select(_ => Unit.Default),
+                            startDelayNotifications)
+                    )
+                    .SelectMany(batch => dedup(batch))
+                    .Publish()
+                    .RefCount();
+            }*/
 
-            public IObservable<IReactiveDbEventArgs> Added
-            {
-                get { return this.addedObservable; }
-            }
+            public IObservable<IReactiveDbObjectEventArgs> Adding => this.addingObservable;
+            
+            public IObservable<IReactiveDbObjectEventArgs> Added=> this.addedObservable;
 
-            public IObservable<Exception> ThrownExceptions
-            {
-                get { return thrownExceptions; }
-            }
+            public IObservable<IReactiveDbObjectEventArgs> Updating => this.updatingObservable;
 
-            public bool areChangeNotificationsEnabled()
-            {
-                return (Interlocked.Read(ref changeNotificationsSuppressed) == 0);
-            }
+            public IObservable<IReactiveDbObjectEventArgs> Updated => this.updatedObservable;
 
-            public bool areChangeNotificationsDelayed()
-            {
-                return (Interlocked.Read(ref changeNotificationsDelayed) > 0);
-            }
+            public IObservable<IReactiveDbObjectEventArgs> Deleting => this.deletingObservable;
+
+            public IObservable<IReactiveDbObjectEventArgs> Deleted => this.deletedObservable;
+
+            public IObservable<IReactiveDbObjectEventArgs> Error => this.errorObservable;
+
+            public IObservable<Exception> ThrownExceptions=> thrownExceptions;
+
+            //public int errorCountSubscriber { get; private set; }
+
+            public bool areChangeNotificationsEnabled()=> (Interlocked.Read(ref changeNotificationsSuppressed) == 0);
+
+            public bool areChangeNotificationsDelayed()=> (Interlocked.Read(ref changeNotificationsDelayed) > 0);
 
             /// <summary>
             /// When this method is called, an object will not fire change
@@ -171,29 +343,35 @@ namespace ReactiveDbCore
                 });
             }
 
-            public void raiseEntityAdding()
+            public void raiseEntityAdding()=> raiseEntityEvent(sender.RaiseEntityAdding, this.addingSubject);
+
+            public void raiseEntityAdded() => raiseEntityEvent(sender.RaiseEntityAdded, this.addedSubject);
+
+            public void raiseEntityUpdating()=> raiseEntityEvent(sender.RaiseEntityUpdating, this.updatingSubject);
+            
+            public void raiseEntityUpdated()=> raiseEntityEvent(sender.RaiseEntityUpdated, this.updatedSubject);
+
+            public void raiseEntityDeleting() => raiseEntityEvent(sender.RaiseEntityDeleting, this.deletingSubject);
+
+            public void raiseEntityDeleted() => raiseEntityEvent(sender.RaiseEntityDeleted, this.deletedSubject);
+
+            public bool raiseEntityError(Exception ex)
+            {
+                if (errorCountable.Count == 0) return false;
+                raiseEntityEvent(sender.RaiseEntityError, this.errorSubject, ex);
+                return true;
+            }
+
+            private void raiseEntityEvent(Action<ReactiveDbObjectEventArgs> @event,ISubject<IReactiveDbObjectEventArgs> @subject,Exception ex=null)
             {
                 if (!this.areChangeNotificationsEnabled())
                     return;
-
-                var adding = new ReactiveDbEventArgs(sender);
-                sender.RaiseEntityAdding(adding);
-
-                this.notifyObservable(sender, adding, this.addingSubject);
+                
+                var args = new ReactiveDbObjectEventArgs(sender,ex);
+                @event(args);
+                this.notifyObservable(sender, args, subject);
             }
-
-            public void raiseEntityAdded()
-            {
-                if (!this.areChangeNotificationsEnabled())
-                    return;
-
-                var added = new ReactiveDbEventArgs(sender);
-                sender.RaiseEntityAdding(added);
-
-                this.notifyObservable(sender, added, this.addedSubject);
-            }
-
-            internal void notifyObservable<T>(IReactiveDbObject rxObj, T item, ISubject<T> subject)
+            private void notifyObservable<T>(IReactiveDbObject rxObj, T item, ISubject<T> subject)
             {
                 try
                 {
@@ -209,13 +387,42 @@ namespace ReactiveDbCore
 
         interface IExtensionState
         {
-            IObservable<IReactiveDbEventArgs> Adding { get; }
+            #region ADD
+            IObservable<IReactiveDbObjectEventArgs> Adding { get; }
 
-            IObservable<IReactiveDbEventArgs> Added { get; }
+            IObservable<IReactiveDbObjectEventArgs> Added { get; }
 
             void raiseEntityAdding();
 
             void raiseEntityAdded();
+            #endregion
+
+            #region UPDATE
+            IObservable<IReactiveDbObjectEventArgs> Updating { get; }
+
+            IObservable<IReactiveDbObjectEventArgs> Updated { get; }
+
+            void raiseEntityUpdating();
+
+            void raiseEntityUpdated();
+            #endregion
+
+            #region DELETE
+            IObservable<IReactiveDbObjectEventArgs> Deleting { get; }
+
+            IObservable<IReactiveDbObjectEventArgs> Deleted { get; }
+
+            void raiseEntityDeleting();
+
+            void raiseEntityDeleted();
+            #endregion
+
+            #region ERROR
+            IObservable<IReactiveDbObjectEventArgs> Error { get; }
+
+            bool raiseEntityError(Exception ex);
+            
+            #endregion
 
             IObservable<Exception> ThrownExceptions { get; }
 
@@ -228,6 +435,8 @@ namespace ReactiveDbCore
             IDisposable delayChangeNotifications();
         }
 
+
+        #endregion
     }
 
 

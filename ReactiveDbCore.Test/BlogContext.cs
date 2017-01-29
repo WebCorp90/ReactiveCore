@@ -19,5 +19,11 @@ namespace ReactiveDbCore.Test
 
         }
         public DbSet<Blog> Blogs { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Blog>().Property(b => b.Author).IsRequired();
+        }
     }
 }

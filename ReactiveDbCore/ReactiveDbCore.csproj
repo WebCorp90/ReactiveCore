@@ -196,6 +196,7 @@
     <Compile Include="ReactiveDbContext.cs" />
     <Compile Include="ReactiveDbCoreException.cs" />
     <Compile Include="ReactiveDbObject.cs" />
+    <Compile Include="ReactiveExtensions.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="UnitOfWork.cs" />
   </ItemGroup>

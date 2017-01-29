@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace ReactiveDbCore
 {
 
-    public interface IReactiveDbEventArgs
+    public interface IReactiveDbObjectEventArgs
     {
 
 
@@ -16,28 +16,71 @@ namespace ReactiveDbCore
         /// The object that has raised the change.
         /// </summary>
         IReactiveDbObject Sender { get; }
+
+        Exception Exception { get; }
     }
-    public class ReactiveDbEventArgs : EventArgs, IReactiveDbEventArgs
+    public interface IReactiveDbContextEventArgs
+    {
+
+
+        /// <summary>
+        /// The object that has raised the change.
+        /// </summary>
+        ReactiveDbContext Sender { get; }
+
+        Exception Exception { get; }
+    }
+    public class ReactiveDbObjectEventArgs : EventArgs, IReactiveDbObjectEventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ReactivePropertyChangedEventArgs{TSender}"/> class.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="propertyName">Name of the property.</param>
-        public ReactiveDbEventArgs(IReactiveDbObject sender)
+        public ReactiveDbObjectEventArgs(IReactiveDbObject sender):this(sender,null)
         {
-            this.Sender = sender;
+            
         }
 
-       
+        public ReactiveDbObjectEventArgs(IReactiveDbObject sender,Exception ex)
+        {
+            this.Sender = sender;
+            this.Exception = ex;
+        }
+
+        public Exception Exception { get; private set; }
+
         /// <summary>
         ///
         /// </summary>
         public IReactiveDbObject Sender { get; private set; }
     }
-    
 
-    public delegate void ReactiveDbEventHandler(IReactiveDbObject sender, ReactiveDbEventArgs e);
+    public class ReactiveDbContextEventArgs : EventArgs, IReactiveDbContextEventArgs
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReactivePropertyChangedEventArgs{TSender}"/> class.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        public ReactiveDbContextEventArgs(ReactiveDbContext sender) : this(sender, null)
+        {
+
+        }
+
+        public ReactiveDbContextEventArgs(ReactiveDbContext sender, Exception ex)
+        {
+            this.Sender = sender;
+            this.Exception = ex;
+        }
+
+        public Exception Exception { get; private set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public ReactiveDbContext Sender { get; private set; }
+    }
+
+    public delegate void ReactiveDbEventHandler(IReactiveDbObject sender, ReactiveDbObjectEventArgs e);
     public interface INotifyEntityAdded
     {
         event ReactiveDbEventHandler EntityAdded;
