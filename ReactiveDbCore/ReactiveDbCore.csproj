@@ -199,6 +199,7 @@
     <Compile Include="ReactiveExtensions.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="UnitOfWork.cs" />
+    <Compile Include="ValidationEntityError.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PropertyChangedCore.Helpers\PropertyChangedCore.Helpers.csproj">

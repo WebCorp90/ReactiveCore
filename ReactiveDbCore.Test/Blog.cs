@@ -17,5 +17,9 @@ namespace ReactiveDbCore.Test
         [Required]
         [Reactive]
         public string Author { get; set; }
+
+        [Required]
+        [Reactive]
+        public string Category { get; set; }
     }
 }

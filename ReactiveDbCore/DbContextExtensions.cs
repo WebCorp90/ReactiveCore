@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+#if DEBUG
+using System.Diagnostics;
+#endif
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 namespace ReactiveDbCore
@@ -26,17 +28,17 @@ namespace ReactiveDbCore
             Contract.Requires(dbContext != null);
             Contract.Requires(baseSaveChanges != null);
 
-            var afterEvents = dbContext.RaiseBeforeEvents();
+
             try
             {
+                dbContext.Validate();
+                var afterEvents = dbContext.RaiseBeforeEvents();
                 var result = baseSaveChanges(acceptAllChangesOnSuccess);
                 afterEvents.RaiseAfterEvents();
                 return result;
             }
-            catch (Exception ex) when (dbContext.RaiseFailedEvents(ex))
-            {
-
-            }
+            catch (ValidationEntityException ex) when (dbContext.RaiseValidationFailedEvents(ex)) { }
+            catch (Exception ex) when (dbContext.RaiseFailedEvents(ex)) { }
             return 0;
 
 
@@ -90,10 +92,28 @@ namespace ReactiveDbCore
             return contextResult || entityResult;
         }
 
+
+        private static bool RaiseValidationFailedEvents<TReactiveDbcontext>(this TReactiveDbcontext context, ValidationEntityException ex) where TReactiveDbcontext:ReactiveDbContext
+        {
+            Contract.Requires(context != null);
+            Contract.Requires(ex != null);
+            var entityResult = false;
+#if DEBUG
+            if (Debugger.IsAttached) Debugger.Break();
+#endif
+            ex.Errors.Errors.ForEach(entry =>
+            {
+                entityResult = ((IReactiveDbObject)entry.Entity).RaiseDbEntityError(entry.Exception) && true;
+
+            });
+            return entityResult;
+        }
+
         public static List<EntityEntry> GetReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext => dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).IsAssignableFrom(e.Entity.GetType()); }).ToList();
 
 
         public static async Task<int> SaveChangesWithTriggersAsync<TReactiveDbContext>(this TReactiveDbContext dbContext, Func<Boolean, CancellationToken, Task<Int32>> baseSaveChangesAsync, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+            where TReactiveDbContext : ReactiveDbContext
         {
             return await Task.Run(() =>
             {
@@ -101,6 +121,7 @@ namespace ReactiveDbCore
             });
         }
         public static Task<Int32> SaveChangesWithTriggersAsync<TReactiveDbContext>(this TReactiveDbContext dbContext, Func<Boolean, CancellationToken, Task<Int32>> baseSaveChangesAsync, CancellationToken cancellationToken = default(CancellationToken))
+            where TReactiveDbContext : ReactiveDbContext
         {
             return dbContext.SaveChangesWithTriggersAsync(baseSaveChangesAsync, true, cancellationToken);
         }

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
-
+using System.Reactive.Linq;
 namespace ReactiveDbCore.Test
 {
     [TestClass]
@@ -93,13 +93,18 @@ namespace ReactiveDbCore.Test
         [ExpectedException(typeof(DbUpdateException))]
         public void TestDeleteFlagsWithSubscriberAndContextErrorRequired()
         {
+            Context.Error.Where(e => e.Exception is ValidationEntityException).Subscribe(e => {
+                if (Debugger.IsAttached) Debugger.Break();
+            });
             Context.Error.Subscribe(e =>
             {
                 if (Debugger.IsAttached) Debugger.Break();
                 Trace.WriteLine(e.Exception.Message);
             });
-            Blog b = new Test.Blog();
+            Blog b = new Blog();
             Add(b);
+            Blog b0 = new Blog();
+            Add(b0);
             b.Error.Subscribe(e =>
             {
                 if (Debugger.IsAttached) Debugger.Break();
@@ -110,6 +115,7 @@ namespace ReactiveDbCore.Test
                 Trace.WriteLine($"{b.Url} added");
             });
             b.Url = "www.free.Fr";
+            b0.Category = "web";
             //Delete(b);
             Save();
         }

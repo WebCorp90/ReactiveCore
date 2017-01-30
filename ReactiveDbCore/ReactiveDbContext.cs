@@ -1,13 +1,15 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PropertyChangedCore.Helpers;
 using ReactiveCore;
-using System.Reactive.Subjects;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Reactive.Linq;
-
+using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
 namespace ReactiveDbCore
 {
     /// <summary>
@@ -21,6 +23,8 @@ namespace ReactiveDbCore
         ISubject<IReactiveDbContextEventArgs> errorSubject;
         IObservable<IReactiveDbContextEventArgs> errorObservable;
         private Countable errorCountable;
+        
+        
         #endregion
 
         #region Constructors
@@ -46,6 +50,7 @@ namespace ReactiveDbCore
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)=> TriggersEnabled ? this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess) : base.SaveChanges(acceptAllChangesOnSuccess);
+        
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken)) => TriggersEnabled ? this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, cancellationToken) : base.SaveChangesAsync(cancellationToken);
 
@@ -77,6 +82,31 @@ namespace ReactiveDbCore
         }
         #endregion
 
-        
+        #region Validation
+        public bool EnableValidation { get; set; } = true;
+        public void Validate()
+        {
+            if (!EnableValidation) return;
+            var entities = from e in this.ChangeTracker.Entries()
+                           where e.State == EntityState.Added
+                               || e.State == EntityState.Modified
+                           select e.Entity;
+            List<ValidationEntityError> errors = new List<ValidationEntityError>();
+            foreach (var entity in entities)
+            {
+                try
+                {
+                    var validationContext = new ValidationContext(entity);
+                    Validator.ValidateObject(entity, validationContext);
+                }catch(ValidationException ex)
+                {
+                    errors.Add(new ValidationEntityError(entity, ex));
+                    //throw new ValidationEntityException(new ValidationEntityEventArg(this, entity, ex));
+                }
+            }
+            if(errors.Count>0) throw new ValidationEntityException(new ValidationEntityEventArg(this,errors));
+        }
+        #endregion
+
     }
 }

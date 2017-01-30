@@ -7,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace ReactiveDbCore
 {
+    public interface IValidationEntityEventArg
+    {
 
+        ReactiveDbContext Context { get; }
+        List<ValidationEntityError> Errors { get; }
+    }
     public interface IReactiveDbObjectEventArgs
     {
 
@@ -78,6 +83,31 @@ namespace ReactiveDbCore
         ///
         /// </summary>
         public ReactiveDbContext Sender { get; private set; }
+    }
+
+    public class ValidationEntityEventArg:EventArgs,IValidationEntityEventArg
+    {
+   
+
+        public ValidationEntityEventArg(ReactiveDbContext context, List<ValidationEntityError> errors)
+        {
+            this.Context = context;
+            this.Errors = errors;
+        }
+
+        public ReactiveDbContext Context { get; private set; }
+
+        public List<ValidationEntityError> Errors { get; private set; }
+    }
+
+    public class ValidationEntityException : Exception
+    {
+        public ValidationEntityException(ValidationEntityEventArg args)
+        {
+            this.Errors = args;
+        }
+
+        public ValidationEntityEventArg Errors { get; private set; }
     }
 
     public delegate void ReactiveDbEventHandler(IReactiveDbObject sender, ReactiveDbObjectEventArgs e);
