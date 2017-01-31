@@ -23,8 +23,11 @@ namespace ReactiveDbCore
         ISubject<IReactiveDbContextEventArgs> errorSubject;
         IObservable<IReactiveDbContextEventArgs> errorObservable;
         private Countable errorCountable;
-        
-        
+
+        ISubject<ValidationEntitiesException> validationErrorSubject;
+        IObservable<ValidationEntitiesException> validationErrorObservable;
+        private Countable validationErrorCountable;
+
         #endregion
 
         #region Constructors
@@ -36,6 +39,11 @@ namespace ReactiveDbCore
             this.errorObservable = errorSubject.Publish().RefCount();
             this.errorCountable = new Countable();
             this.errorObservable = this.errorCountable.GetCountable(this.errorObservable);
+
+            this.validationErrorSubject = new Subject<ValidationEntitiesException>();
+            this.validationErrorObservable = validationErrorSubject.Publish().RefCount();
+            this.validationErrorCountable = new Countable();
+            this.validationErrorObservable = this.validationErrorCountable.GetCountable(this.validationErrorObservable);
         }
 
 
@@ -51,7 +59,6 @@ namespace ReactiveDbCore
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)=> TriggersEnabled ? this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess) : base.SaveChanges(acceptAllChangesOnSuccess);
         
-
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken)) => TriggersEnabled ? this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, cancellationToken) : base.SaveChangesAsync(cancellationToken);
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)) => TriggersEnabled ? this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, cancellationToken) : base.SaveChangesAsync(cancellationToken);
@@ -80,22 +87,31 @@ namespace ReactiveDbCore
         {
             errorSubject.OnNext(new ReactiveDbContextEventArgs(this, ex));
         }
+
         #endregion
 
         #region Validation
+        public IObservable<ValidationEntitiesException> ValidationError => this.validationErrorObservable;
+        public int ValidationErrorCountSubscriber => validationErrorCountable.Count;
+        
+
         public bool EnableValidation { get; set; } = true;
+        public void RaiseValidationError(ValidationEntitiesException ex) => validationErrorSubject.OnNext(ex);
         public void Validate()
         {
             if (!EnableValidation) return;
-            var entities = from e in this.ChangeTracker.Entries()
-                           where e.State == EntityState.Added
-                               || e.State == EntityState.Modified
-                           select e.Entity;
+            /* var entities = from e in this.ChangeTracker.Entries()
+                            where e.State == EntityState.Added
+                                || e.State == EntityState.Modified
+                            select e.Entity;*/
+            var entities = this.GetValidatableReactiveDbObjectEntries();
             List<ValidationEntityError> errors = new List<ValidationEntityError>();
-            foreach (var entity in entities)
+            foreach (var entityEntry in entities)
             {
+                var entity = (IReactiveDbObject)entityEntry.Entity;
                 try
                 {
+                    
                     var validationContext = new ValidationContext(entity);
                     Validator.ValidateObject(entity, validationContext);
                 }catch(ValidationException ex)
@@ -104,7 +120,7 @@ namespace ReactiveDbCore
                     //throw new ValidationEntityException(new ValidationEntityEventArg(this, entity, ex));
                 }
             }
-            if(errors.Count>0) throw new ValidationEntityException(new ValidationEntityEventArg(this,errors));
+            if(errors.Count>0) throw new ValidationEntitiesException(new ValidationEntitiesEventArg(this,errors));
         }
         #endregion
 

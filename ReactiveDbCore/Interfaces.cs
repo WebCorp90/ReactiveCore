@@ -9,6 +9,10 @@ namespace ReactiveDbCore
 {
     public interface IValidationEntityEventArg
     {
+        ValidationEntityError Error { get; }
+    }
+    public interface IValidationEntitiesEventArg
+    {
 
         ReactiveDbContext Context { get; }
         List<ValidationEntityError> Errors { get; }
@@ -85,11 +89,11 @@ namespace ReactiveDbCore
         public ReactiveDbContext Sender { get; private set; }
     }
 
-    public class ValidationEntityEventArg:EventArgs,IValidationEntityEventArg
+    public class ValidationEntitiesEventArg:EventArgs,IValidationEntitiesEventArg
     {
    
 
-        public ValidationEntityEventArg(ReactiveDbContext context, List<ValidationEntityError> errors)
+        public ValidationEntitiesEventArg(ReactiveDbContext context, List<ValidationEntityError> errors)
         {
             this.Context = context;
             this.Errors = errors;
@@ -100,23 +104,52 @@ namespace ReactiveDbCore
         public List<ValidationEntityError> Errors { get; private set; }
     }
 
-    public class ValidationEntityException : Exception
+    public class ValidationEntitiesException : Exception
     {
-        public ValidationEntityException(ValidationEntityEventArg args)
+        public ValidationEntitiesException(ValidationEntitiesEventArg args)
         {
             this.Errors = args;
         }
 
+        public ValidationEntitiesEventArg Errors { get; private set; }
+    }
+
+
+    public class ValidationEntityEventArg : EventArgs, IValidationEntityEventArg
+    {
+
+
+        public ValidationEntityEventArg( ValidationEntityError error)
+        {
+            this.Error = error;
+        }
+        
+
+        public ValidationEntityError Error { get; private set; }
+    }
+
+    public class ValidationEntityException : Exception
+    {
+        public ValidationEntityException(IReactiveDbObject sender, ValidationEntityEventArg args)
+        {
+            this.Errors = args;
+            this.Sender = sender;
+        }
+
         public ValidationEntityEventArg Errors { get; private set; }
+        public IReactiveDbObject Sender { get; private set; }
     }
 
     public delegate void ReactiveDbEventHandler(IReactiveDbObject sender, ReactiveDbObjectEventArgs e);
+
+    public delegate void ValidationEntityEventHandler(ValidationEntityEventArg e);
+
     public interface INotifyEntityAdded
     {
-        event ReactiveDbEventHandler EntityAdded;
+        event ReactiveDbEventHandler onAdded;
     }
     public interface INotifyEntityAdding
     {
-        event ReactiveDbEventHandler EntityAdding;
+        event ReactiveDbEventHandler onAdding;
     }
 }

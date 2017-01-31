@@ -11,28 +11,30 @@ namespace ReactiveDbCore
     public class ReactiveDbObject : ReactiveObject,IReactiveDbObject
     {
         #region events
-        public event ReactiveDbEventHandler EntityAdded;
-        void IReactiveDbObject.RaiseEntityAdded(ReactiveDbObjectEventArgs args) => this.EntityAdded?.Invoke(this, args);
+        public event ReactiveDbEventHandler onAdded;
+        void IReactiveDbObject.RaiseEntityAdded(ReactiveDbObjectEventArgs args) => this.onAdded?.Invoke(this, args);
 
-        public event ReactiveDbEventHandler EntityAdding;
-        void IReactiveDbObject.RaiseEntityAdding(ReactiveDbObjectEventArgs args) => this.EntityAdding?.Invoke(this, args);
+        public event ReactiveDbEventHandler onAdding;
+        void IReactiveDbObject.RaiseEntityAdding(ReactiveDbObjectEventArgs args) => this.onAdding?.Invoke(this, args);
 
-        public event ReactiveDbEventHandler EntityUpdated;
-        void IReactiveDbObject.RaiseEntityUpdated(ReactiveDbObjectEventArgs args) => this.EntityUpdated?.Invoke(this, args);
+        public event ReactiveDbEventHandler onUpdated;
+        void IReactiveDbObject.RaiseEntityUpdated(ReactiveDbObjectEventArgs args) => this.onUpdated?.Invoke(this, args);
 
-        public event ReactiveDbEventHandler EntityUpdating;
-        void IReactiveDbObject.RaiseEntityUpdating(ReactiveDbObjectEventArgs args) => this.EntityUpdating?.Invoke(this, args);
+        public event ReactiveDbEventHandler onUpdating;
+        void IReactiveDbObject.RaiseEntityUpdating(ReactiveDbObjectEventArgs args) => this.onUpdating?.Invoke(this, args);
 
-        public event ReactiveDbEventHandler EntityDeleted;
-        void IReactiveDbObject.RaiseEntityDeleted(ReactiveDbObjectEventArgs args) => this.EntityDeleted?.Invoke(this, args);
+        public event ReactiveDbEventHandler onDeleted;
+        void IReactiveDbObject.RaiseEntityDeleted(ReactiveDbObjectEventArgs args) => this.onDeleted?.Invoke(this, args);
 
-        public event ReactiveDbEventHandler EntityDeleting;
-        void IReactiveDbObject.RaiseEntityDeleting(ReactiveDbObjectEventArgs args) => this.EntityDeleting?.Invoke(this, args);
+        public event ReactiveDbEventHandler onDeleting;
+        void IReactiveDbObject.RaiseEntityDeleting(ReactiveDbObjectEventArgs args) => this.onDeleting?.Invoke(this, args);
 
-        public event ReactiveDbEventHandler EntityError;
-        void IReactiveDbObject.RaiseEntityError(ReactiveDbObjectEventArgs args) => this.EntityError?.Invoke(this, args);
+        public event ReactiveDbEventHandler onError;
+        void IReactiveDbObject.RaiseEntityError(ReactiveDbObjectEventArgs args) => this.onError?.Invoke(this, args);
 
 
+        public event ValidationEntityEventHandler onValidationError;
+        void IReactiveDbObject.RaiseEntityValidationError(ValidationEntityEventArg args) => this.onValidationError?.Invoke( args);
 
         #endregion
 
@@ -84,6 +86,12 @@ namespace ReactiveDbCore
         /// </summary>
         [IgnoreDataMember]
         public IObservable<IReactiveDbObjectEventArgs> Error => ((IReactiveDbObject)this).getErrorObservable();
+
+        /// <summary>
+        /// Represents an Observable that fires *after* a property is on error
+        /// </summary>
+        [IgnoreDataMember]
+        public IObservable<ValidationEntityEventArg> ValidationError => ((IReactiveDbObject)this).getValidationErrorObservable();
 
     }
 }

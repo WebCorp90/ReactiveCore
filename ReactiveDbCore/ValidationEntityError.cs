@@ -8,7 +8,7 @@ namespace ReactiveDbCore
        
        
 
-        public ValidationEntityError(object entity, ValidationException ex)
+        public ValidationEntityError(IReactiveDbObject entity, ValidationException ex)
         {
             Contract.Requires(entity != null);
             Contract.Requires(ex != null);
@@ -16,7 +16,7 @@ namespace ReactiveDbCore
             this.Exception = ex;
         }
 
-        public object Entity { get; private set; }
+        public IReactiveDbObject Entity { get; private set; }
         public ValidationException Exception { get; private set; }
 
     }

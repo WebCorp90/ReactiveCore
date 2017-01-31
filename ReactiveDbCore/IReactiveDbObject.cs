@@ -1,6 +1,7 @@
 ﻿using ReactiveCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Concurrency;
@@ -23,6 +24,7 @@ namespace ReactiveDbCore
         void RaiseEntityDeleting(ReactiveDbObjectEventArgs args);
         void RaiseEntityDeleted(ReactiveDbObjectEventArgs args);
         void RaiseEntityError(ReactiveDbObjectEventArgs args);
+        void RaiseEntityValidationError(ValidationEntityEventArg args);
     }
 
     public static class IReactiveDbObjectExtensions
@@ -119,20 +121,40 @@ namespace ReactiveDbCore
             var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
             return val.Error.Cast<IReactiveDbObjectEventArgs>();
         }
+
+        public static IObservable<ValidationEntityEventArg> getValidationErrorObservable(this IReactiveDbObject This)
+        {
+            var val = state.GetValue(This, key => (IExtensionState)new ExtensionState(This));
+            return val.ValidationError.Cast<ValidationEntityEventArg>();
+        }
+
         internal static bool RaiseDbEntityError(this IReactiveDbObject entity,Exception ex)
         {
             var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
 
             return s.raiseEntityError(ex);
         }
+        internal static bool RaiseDbValidationEntityError(this IReactiveDbObject entity, ValidationException ex)
+        {
+            var s = state.GetValue(entity, key => (IExtensionState)new ExtensionState(entity));
 
+            return s.raiseValidationEntityError(ex);
+        }
         internal static bool RaiseDbContextError(this ReactiveDbContext context,Exception ex)
         {
             if (context.ErrorCountSubscriber == 0) return false;
             context.RaiseError(ex);
             return true;
         }
+        internal static bool RaiseDbValidationContextError(this ReactiveDbContext context, ValidationEntitiesException ex)
+        {
+            if (context.ValidationErrorCountSubscriber== 0) return false;
+            context.RaiseValidationError(  ex);
+            return true;
+        }
+        
         #endregion
+
         #region internal helpers methods
         static IEnumerable<IReactiveDbObjectEventArgs> dedup(IList<IReactiveDbObjectEventArgs> batch)
         {
@@ -175,6 +197,8 @@ namespace ReactiveDbCore
             IObservable<IReactiveDbObjectEventArgs> deletedObservable;
             ISubject<IReactiveDbObjectEventArgs> errorSubject;
             IObservable<IReactiveDbObjectEventArgs> errorObservable;
+            ISubject<ValidationEntityEventArg> validationErrorSubject;
+            IObservable<ValidationEntityEventArg> validationErrorObservable;
 
             ISubject<IReactiveDbObjectEventArgs> fireChangedBatchSubject;
             ISubject<Exception> thrownExceptions;
@@ -183,7 +207,7 @@ namespace ReactiveDbCore
             IReactiveDbObject sender;
 
             Countable errorCountable;
-            IObservable<IReactiveDbObjectEventArgs> errorCount;
+            Countable validationErrorCountable;
             /// <summary>
             /// Initializes a new instance of the <see cref="ExtensionState{TSender}"/> class.
             /// </summary>
@@ -197,6 +221,8 @@ namespace ReactiveDbCore
                 this.deletingSubject = new Subject<IReactiveDbObjectEventArgs>();
                 this.deletedSubject = new Subject<IReactiveDbObjectEventArgs>();
                 this.errorSubject = new Subject<IReactiveDbObjectEventArgs>();
+                this.validationErrorSubject = new Subject<ValidationEntityEventArg>();
+
                 this.startDelayNotifications = new Subject<Unit>();
                 this.thrownExceptions = new ScheduledSubject<Exception>(Scheduler.Immediate, ReactiveCoreApp.DefaultExceptionHandler);
 
@@ -279,6 +305,12 @@ namespace ReactiveDbCore
                 this.errorCountable = new Countable();
                 this.errorObservable = this.errorCountable.GetCountable(this.errorObservable);
 
+                this.validationErrorObservable = validationErrorSubject
+                    .Publish()
+                    .RefCount();
+                this.validationErrorCountable = new Countable();
+                this.validationErrorObservable = this.validationErrorCountable.GetCountable(this.validationErrorObservable);
+
             }
 
           /*  private IObservable<IReactiveDbEventArgs> createObservable(ref ISubject<IReactiveDbEventArgs> subject)
@@ -306,6 +338,8 @@ namespace ReactiveDbCore
             public IObservable<IReactiveDbObjectEventArgs> Deleted => this.deletedObservable;
 
             public IObservable<IReactiveDbObjectEventArgs> Error => this.errorObservable;
+
+            public IObservable<ValidationEntityEventArg> ValidationError => this.validationErrorObservable;
 
             public IObservable<Exception> ThrownExceptions=> thrownExceptions;
 
@@ -362,6 +396,13 @@ namespace ReactiveDbCore
                 return true;
             }
 
+            public bool raiseValidationEntityError(ValidationException ex)
+            {
+                if (validationErrorCountable.Count == 0) return false;
+                raiseValidationEntityEvent(sender.RaiseEntityValidationError, this.validationErrorSubject, ex);
+                return true;
+            }
+
             private void raiseEntityEvent(Action<ReactiveDbObjectEventArgs> @event,ISubject<IReactiveDbObjectEventArgs> @subject,Exception ex=null)
             {
                 if (!this.areChangeNotificationsEnabled())
@@ -369,9 +410,20 @@ namespace ReactiveDbCore
                 
                 var args = new ReactiveDbObjectEventArgs(sender,ex);
                 @event(args);
-                this.notifyObservable(sender, args, subject);
+                this.notifyObservable( args, subject);
             }
-            private void notifyObservable<T>(IReactiveDbObject rxObj, T item, ISubject<T> subject)
+
+            private void raiseValidationEntityEvent(Action<ValidationEntityEventArg> @event, ISubject<ValidationEntityEventArg> @subject, ValidationException ex = null)
+            {
+                if (!this.areChangeNotificationsEnabled())
+                    return;
+
+                var args = new ValidationEntityEventArg(new  ValidationEntityError(sender, ex));
+                @event(args);
+                this.notifyObservable( args, subject);
+            }
+
+            private void notifyObservable<T>( T item, ISubject<T> subject)
             {
                 try
                 {
@@ -420,8 +472,12 @@ namespace ReactiveDbCore
             #region ERROR
             IObservable<IReactiveDbObjectEventArgs> Error { get; }
 
+            IObservable<ValidationEntityEventArg> ValidationError { get; }
+
             bool raiseEntityError(Exception ex);
-            
+
+            bool raiseValidationEntityError(ValidationException ex);
+
             #endregion
 
             IObservable<Exception> ThrownExceptions { get; }
