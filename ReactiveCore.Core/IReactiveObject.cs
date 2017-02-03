@@ -174,7 +174,7 @@ namespace ReactiveCore
             IObservable<IReactivePropertyChangedEventArgs<TSender>> changingObservable;
             ISubject<IReactivePropertyChangedEventArgs<TSender>> changedSubject;
             IObservable<IReactivePropertyChangedEventArgs<TSender>> changedObservable;
-            ISubject<IReactivePropertyChangedEventArgs<TSender>> fireChangedBatchSubject;
+            //ISubject<IReactivePropertyChangedEventArgs<TSender>> fireChangedBatchSubject;
             ISubject<Exception> thrownExceptions;
             ISubject<Unit> startDelayNotifications;
 

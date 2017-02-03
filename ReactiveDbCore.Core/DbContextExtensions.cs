@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 #if DEBUG
 using System.Diagnostics;
 #endif
@@ -10,6 +9,9 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+#if CORE
+using System.Reflection;
+#endif
 namespace ReactiveDbCore
 {
     internal class EntityEntryComparer : IEqualityComparer<EntityEntry>
@@ -85,7 +87,7 @@ namespace ReactiveDbCore
             Contract.Requires(ex != null);
             var entityResult = false;
             var contextResult = false;
-            contextResult= context.RaiseDbContextError(ex);
+            contextResult = context.RaiseDbContextError(ex);
             context.GetReactiveDbObjectEntries().ForEach(entry =>
             {
                 entityResult = ((IReactiveDbObject)entry.Entity).RaiseDbEntityError(ex) && true;
@@ -94,7 +96,7 @@ namespace ReactiveDbCore
         }
 
 
-        private static bool RaiseValidationFailedEvents<TReactiveDbcontext>(this TReactiveDbcontext context, ValidationEntitiesException ex) where TReactiveDbcontext:ReactiveDbContext
+        private static bool RaiseValidationFailedEvents<TReactiveDbcontext>(this TReactiveDbcontext context, ValidationEntitiesException ex) where TReactiveDbcontext : ReactiveDbContext
         {
             Contract.Requires(context != null);
             Contract.Requires(ex != null);
@@ -110,12 +112,16 @@ namespace ReactiveDbCore
                 entityResult = ((IReactiveDbObject)entry.Entity).RaiseDbValidationEntityError(entry.Exception) && true;
 
             });
-            return contextResult || entityResult ;
+            return contextResult || entityResult;
         }
 
-        public static List<EntityEntry> GetReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext 
-            => dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).IsAssignableFrom(e.Entity.GetType()); }).ToList();
-
+        public static List<EntityEntry> GetReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
+            =>
+#if CORE
+            dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).GetTypeInfo().IsAssignableFrom(e.Entity.GetType()); }).ToList();
+#else
+            dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).IsAssignableFrom(e.Entity.GetType()); }).ToList();
+#endif
         public static List<EntityEntry> GetValidatableReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
             => dbContext.GetReactiveDbObjectEntries().Where(e => { return e.State == EntityState.Added || e.State == EntityState.Modified; }).ToList();
 

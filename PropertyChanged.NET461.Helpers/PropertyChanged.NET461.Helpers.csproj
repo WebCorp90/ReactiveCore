@@ -84,10 +84,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\ObservableAsPropertyAttribute.cs" />
-    <Compile Include="Helpers\ObservableAsPropertyExtensions.cs" />
-    <Compile Include="Helpers\ReactiveAttribute.cs" />
-    <Compile Include="Helpers\ReactiveDependencyAttribute.cs" />
+    <Compile Include="..\PropertyChanged.Core.Helpers\Helpers\ObservableAsPropertyAttribute.cs">
+      <Link>Helpers\ObservableAsPropertyAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyChanged.Core.Helpers\Helpers\ObservableAsPropertyExtensions.cs">
+      <Link>Helpers\ObservableAsPropertyExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyChanged.Core.Helpers\Helpers\ReactiveAttribute.cs">
+      <Link>Helpers\ReactiveAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\PropertyChanged.Core.Helpers\Helpers\ReactiveDependencyAttribute.cs">
+      <Link>Helpers\ReactiveDependencyAttribute.cs</Link>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

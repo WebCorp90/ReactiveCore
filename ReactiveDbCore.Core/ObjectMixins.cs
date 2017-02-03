@@ -1,13 +1,9 @@
 ﻿using ReactiveCore;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReactiveDbCore
 {
@@ -17,9 +13,12 @@ namespace ReactiveDbCore
         {
             if(!typeof(T).HasDataContractAttribute())
                 throw ReactiveDbCoreException.NoDataContractSpecified;
-
-            var result= typeof(T).GetProperties()
-               .Where(property =>
+#if CORE
+            var properties = typeof(T).GetTypeInfo().GetProperties();
+#else
+            var properties= typeof(T).GetProperties();
+#endif
+            var result =properties.Where(property =>
                       property.GetCustomAttributes(false)
                               .OfType<KeyAttribute>()
                               .Any()
@@ -38,7 +37,11 @@ namespace ReactiveDbCore
         {
             try
             {
+#if CORE
+                return t.GetTypeInfo().GetCustomAttribute<TAttr>(true);
+#else
                 return Attribute.GetCustomAttribute(t, typeof(TAttr), true) as TAttr;
+#endif
             }
             catch
             {

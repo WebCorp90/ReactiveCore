@@ -18,12 +18,6 @@ namespace ReactiveCore
         {
             return This.Take(This.Count() - count);
         }
-
-       /* internal static IObservable<T> PermaRef<T>(this IConnectableObservable<T> This)
-        {
-            This.Connect();
-            return This;
-        }*/
     }
 
     // according to spouliot, this is just a string match, and will cause the

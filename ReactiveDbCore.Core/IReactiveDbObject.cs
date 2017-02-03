@@ -200,7 +200,7 @@ namespace ReactiveDbCore
             ISubject<ValidationEntityEventArg> validationErrorSubject;
             IObservable<ValidationEntityEventArg> validationErrorObservable;
 
-            ISubject<IReactiveDbObjectEventArgs> fireChangedBatchSubject;
+            //ISubject<IReactiveDbObjectEventArgs> fireChangedBatchSubject;
             ISubject<Exception> thrownExceptions;
             ISubject<Unit> startDelayNotifications;
 

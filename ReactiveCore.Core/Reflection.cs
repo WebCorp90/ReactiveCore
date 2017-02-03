@@ -6,7 +6,6 @@ using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Reflection;
 using System.Text;
-//using Splat;
 
 namespace ReactiveCore
 {
