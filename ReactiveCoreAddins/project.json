@@ -8,8 +8,11 @@
     "Microsoft.AspNetCore.Hosting.Abstractions": "1.1.0",
     "Microsoft.Extensions.DependencyInjection": "1.1.0",
     "Microsoft.Extensions.DependencyModel": "1.1.0",
-    "System.Runtime.Loader": "4.3.0"
-
+    "System.Runtime.Loader": "4.3.0",
+    "PropertyChanged.Core.Helpers": "1.0.0-*",
+    "ReactiveCore.Core": "1.0.0-*",
+    "ReactiveDbCore.Core": "1.0.0-*",
+    "ReactiveHelpers.Core": "1.0.0-*"
   },
 
   "frameworks": {

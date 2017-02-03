@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ReactiveCoreAddins
+namespace ReactiveHelpers.Core
 {
-    public class Class1
+    public interface IInitializable
     {
-        public Class1()
-        {
-        }
+        void Initialize();
     }
 }
