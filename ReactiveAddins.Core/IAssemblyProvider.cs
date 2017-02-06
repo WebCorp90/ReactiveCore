@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
-namespace ReactiveCoreAddins
+namespace ReactiveAddins
 {
     /// <summary>
     /// Describes an assembly provider with the mechanism of getting assemblies that should be involved
@@ -83,7 +83,7 @@ namespace ReactiveCoreAddins
         {
             Contract.Requires<ArgumentNullException>(path != null);
             Contract.Ensures(Contract.Result<IEnumerable<Assembly>>() != null);
-            return new List<Assembly>();
+            return default(IEnumerable<Assembly>);
         }
     }
 }

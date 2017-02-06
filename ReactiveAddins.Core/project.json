@@ -12,7 +12,8 @@
     "PropertyChanged.Core.Helpers": "1.0.0-*",
     "ReactiveCore.Core": "1.0.0-*",
     "ReactiveDbCore.Core": "1.0.0-*",
-    "ReactiveHelpers.Core": "1.0.0-*"
+    "ReactiveHelpers.Core": "1.0.0-*",
+    "Microsoft.AspNetCore.Mvc.Core": "1.1.0"
   },
 
   "frameworks": {

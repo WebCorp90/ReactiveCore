@@ -11,18 +11,19 @@ using Microsoft.Extensions.DependencyModel;
 using PropertyChangedCore.Helpers;
 using ReactiveHelpers.Core;
 using ReactiveHelpers.Core.FsWatcher;
+using System.Threading.Tasks;
 
-namespace ReactiveCoreAddins
+namespace ReactiveAddins
 {
     /// <summary>
     /// <see cref="https://github.com/ExtCore/ExtCore"/>
     /// </summary>
-    public class AssemblyProvider : ReactiveObject, IAssemblyProvider,IDisposable
+    public class AssemblyProvider : ReactiveObject, IAssemblyProvider, IDisposable
     {
         private string _path;
         private List<Assembly> _cachedAssemblies = new List<Assembly>();
-        private ISubject<string> directoryChangedSubject;
-        private IObservable<string> directoryChangedObservable;
+        private ISubject<List<Assembly>> directoryChangedSubject;
+        private IObservable<List<Assembly>> directoryChangedObservable;
 
         private ISubject<bool> hotplugSubject;
         private IObservable<bool> hotpluggedObservable;
@@ -42,10 +43,13 @@ namespace ReactiveCoreAddins
             this.IsCandidateAssembly = assembly => !assembly.FullName.StartsWith("Microsoft.") && !assembly.FullName.StartsWith("System.");
             this.IsCandidateCompilationLibrary = library => library.Name != "NETStandard.Library" && !library.Name.StartsWith("Microsoft.") && !library.Name.StartsWith("System.");
 
-            this.directoryChangedSubject = new Subject<string>();
+            this.directoryChangedSubject = new Subject<List<Assembly>>();
             this.hotplugSubject = new Subject<bool>();
 
+            this.directoryChangedObservable = directoryChangedSubject.AsObservable();
             this.hotpluggedObservable = hotplugSubject.AsObservable();
+
+
             this.Changed.Where(e => e.PropertyName.Equals(HotPlug)).Subscribe(e =>
               {
                   hotplugSubject.OnNext(HotPlug);
@@ -55,16 +59,25 @@ namespace ReactiveCoreAddins
 
         public IEnumerable<Assembly> GetAssemblies(string path)
         {
-            _path.ThrowIfNull<ArgumentException>(PATH_ALLREADY_SET);
+            _path.ThrowIfNotNull<ArgumentException>(PATH_ALLREADY_SET);
+            _path = path;
 
-            if (_cachedAssemblies.Count > 0) return _cachedAssemblies;
+            if (_cachedAssemblies.Count == 0) GetAssemblies();
+            return _cachedAssemblies;
+
+        }
 
 
+
+        
+
+        private IEnumerable<Assembly> GetAssemblies()
+        {
             List<Assembly> assemblies = new List<Assembly>();
-            assemblies.AddRange(this.GetAssembliesFromPath(path));
+            assemblies.AddRange(this.GetAssembliesFromPath(_path));
             assemblies.AddRange(this.GetAssembliesFromDependencyContext());
             _cachedAssemblies = assemblies;
-            _path = path;
+
             return assemblies;
         }
 
@@ -169,6 +182,19 @@ namespace ReactiveCoreAddins
         {
             _fsWatcher.Dispose();
         }
+
+
+        private void Reload()
+        {
+            Task.Run(() =>
+            {
+                GetAssemblies();
+            }).ContinueWith((t) =>
+            {
+                directoryChangedSubject.OnNext(_cachedAssemblies);
+            });
+            
+        }
         #region events
         /// <summary>
         /// Represents an Observable that fires *after* file system changed.
@@ -179,13 +205,13 @@ namespace ReactiveCoreAddins
         {
             get
             {
-                if (_fsWatcher.isNull())
+                if (_fsWatcher.IsNull())
                 {
                     Action<FileSystemWatcher> configure = c => { c.Path = _path; c.Filter = "*.dll"; c.IncludeSubdirectories = false; };
                     _fsWatcher = new ObservableFileSystemWatcher(configure);
-                    _fsWatcher.Created.Subscribe(e => { });
-                    _fsWatcher.Changed.Subscribe(e => { });
-                    _fsWatcher.Deleted.Subscribe(e => { });
+                    _fsWatcher.Created.Subscribe(e => { Reload(); });
+                    _fsWatcher.Changed.Subscribe(e => { Reload(); });
+                    _fsWatcher.Deleted.Subscribe(e => { Reload(); });
 
                 }
                 return _fsWatcher;
