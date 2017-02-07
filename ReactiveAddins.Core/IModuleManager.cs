@@ -16,7 +16,7 @@ namespace ReactiveAddins
 
         void AddModule(IModuleInfo module);
 
-        IEnumerable<IModuleInfo> All(Expression<Func<IModuleInfo, bool>> predicate);
+        IEnumerable<IModuleInfo> All(Func<IModuleInfo, bool> predicate);
 
         IModuleInfo GetByName(string name);
 
@@ -31,7 +31,7 @@ namespace ReactiveAddins
             Contract.Requires<ArgumentNullException>(module != null);
         }
 
-        public IEnumerable<IModuleInfo> All(Expression<Func<IModuleInfo, bool>> predicate)
+        public IEnumerable<IModuleInfo> All(Func<IModuleInfo, bool> predicate)
         {
             Contract.Ensures(Contract.Result<IEnumerable<IModuleInfo>>() != null);
             return default(IEnumerable<IModuleInfo>);

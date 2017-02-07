@@ -39,7 +39,7 @@ namespace ReactiveAddins
 
         public AssemblyProvider(IServiceProvider serviceProvider)
         {
-            this.logger = (serviceProvider.GetService(typeof(ILoggerFactory)) as ILoggerFactory).CreateLogger<AssemblyProvider>();
+            this.logger = serviceProvider.GetService<ILoggerFactory>().CreateLogger<AssemblyProvider>();
             this.IsCandidateAssembly = assembly => !assembly.FullName.StartsWith("Microsoft.") && !assembly.FullName.StartsWith("System.");
             this.IsCandidateCompilationLibrary = library => library.Name != "NETStandard.Library" && !library.Name.StartsWith("Microsoft.") && !library.Name.StartsWith("System.");
 

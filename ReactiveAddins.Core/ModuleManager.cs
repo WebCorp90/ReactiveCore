@@ -28,7 +28,7 @@ namespace ReactiveAddins
             _modules.Add(module);
         }
 
-        public IEnumerable<IModuleInfo> All(Expression<Func<IModuleInfo,bool>> predicate)=> predicate.IsNull() ? _modules : _modules.Where(predicate.Compile());
+        public IEnumerable<IModuleInfo> All(Func<IModuleInfo,bool> predicate)=> predicate.IsNull() ? _modules : _modules.Where(predicate);
  
         public IModuleInfo GetByName(string name)=> _modules.Where(e => e.Name.Equals(name)).FirstOrDefault(ModuleInfo.Empty);
 
