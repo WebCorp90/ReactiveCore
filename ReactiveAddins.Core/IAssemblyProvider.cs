@@ -21,7 +21,7 @@ namespace ReactiveAddins
         /// <param name="path">The extensions path of a web application. Might be used or ignored
         /// by an implementation of the <see cref="IAssemblyProvider">IAssemblyProvider</see> interface.</param>
         /// <returns></returns>
-        IEnumerable<Assembly> GetAssemblies(string path);
+        IEnumerable<IModuleInfo> GetAssemblies(string path);
 
         //// <summary>
         /// Gets or sets the predicate that is used to filter discovered assemblies from a specific folder
@@ -79,11 +79,11 @@ namespace ReactiveAddins
             }
         }
 
-        public IEnumerable<Assembly> GetAssemblies(string path)
+        public IEnumerable<IModuleInfo> GetAssemblies(string path)
         {
             Contract.Requires<ArgumentNullException>(path != null);
-            Contract.Ensures(Contract.Result<IEnumerable<Assembly>>() != null);
-            return default(IEnumerable<Assembly>);
+            Contract.Ensures(Contract.Result<IEnumerable<IModuleInfo>>() != null);
+            return default(IEnumerable<IModuleInfo>);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace ReactiveAddins
     public class ModuleViewLocationExpander : IViewLocationExpander
     {
         private const string _moduleKey = "module";
-        public ModuleViewLocationExpander(string path)
+        public ModuleViewLocationExpander()
         {
 
         }

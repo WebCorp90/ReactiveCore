@@ -6,9 +6,11 @@ using ReactiveHelpers.Core;
 using Microsoft.AspNetCore.Mvc.Razor;
 using System.Reflection;
 using System.Linq;
+using Microsoft.Extensions.FileProviders;
 
 namespace ReactiveAddins
 {
+ 
     public static  class ModuleExtensions
     {
         /// <summary>
@@ -17,36 +19,35 @@ namespace ReactiveAddins
         /// <param name="services"></param>
         /// <param name="path"></param>
         /// <param name="predicate"></param>
-        public static IServiceCollection AddModules( this IServiceCollection services,IMvcCoreBuilder builder, string path, Func<IModuleInfo, bool> predicate=null)
+        public static IServiceCollection AddModules( this IServiceCollection services,string path,IMvcCoreBuilder builder)
         {
             Contract.Requires<ArgumentNullException>(services != null);
             Contract.Requires<ArgumentNullException>(path != null);
             services.AddSingleton<IAssemblyProvider, AssemblyProvider>();
             services.AddSingleton<IModuleManager, ModuleManager>();
 
-            // For the view, a custom ModuleViewLocationExpander is used to help the view engine lookup up the right module folder the views
-            services.Configure<RazorViewEngineOptions>(options =>
-            {
-                options.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
-            });
+            
 
             var moduleManager = services.GetServiceFromCollection<IModuleManager>();
             moduleManager?.LoadFromPath(path);
 
-            var moduleInitializerInterface = typeof(IModuleInitializer);
-            foreach (var module in moduleManager.All(predicate))
-            {
-                // Register controller from modules
-                builder.AddApplicationPart(module.Assembly);
+            //For this view to be recognized by the web application, we need to include the cshtml files as embedded resources
+            //in the class library. Currently, this is done by adding the following setting to the project.json file.
+            //"buildOptions": {
+            //    "embed": "Views/**/*.cshtml"
+            //}
 
-                // Register dependency in modules
-                var moduleInitializerType = module.Assembly.GetTypes().Where(x => typeof(IModuleInitializer).IsAssignableFrom(x)).FirstOrDefault();
-                if (moduleInitializerType != null && moduleInitializerType != typeof(IModuleInitializer))
+            // For the view, a custom ModuleViewLocationExpander is used to help the view engine lookup up the right module folder the views
+            services.Configure<RazorViewEngineOptions>(opts =>
+            {
+                //opts.ViewLocationExpanders.Add(new ModuleViewLocationExpander());
+                foreach (var module in moduleManager.All())
                 {
-                    var moduleInitializer = (IModuleInitializer)Activator.CreateInstance(moduleInitializerType);
-                    moduleInitializer.ConfigureServices(services);
+                    opts.FileProviders.Add(new EmbeddedFileProvider(module.Assembly));
                 }
-            }
+
+            });
+
             return services;
         }
     }

@@ -17,7 +17,10 @@
     "Microsoft.AspNetCore.Mvc.Razor": "1.0.1",
     "Microsoft.Extensions.Configuration": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0"
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Microsoft.Extensions.PlatformAbstractions": "1.1.0",
+    "Microsoft.Extensions.FileProviders.Embedded": "1.0.0",
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.1.0"
   },
 
   "frameworks": {

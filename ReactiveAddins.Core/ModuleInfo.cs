@@ -21,6 +21,8 @@ namespace ReactiveAddins
         }
         public Assembly Assembly { get; private set; }
 
+        public bool Candidate { get;  set; } = true;
+
         public string Name { get; private set; }
 
         public string Path { get; private set; }

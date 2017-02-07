@@ -12,6 +12,7 @@ using PropertyChangedCore.Helpers;
 using ReactiveHelpers.Core;
 using ReactiveHelpers.Core.FsWatcher;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ReactiveAddins
 {
@@ -21,9 +22,9 @@ namespace ReactiveAddins
     public class AssemblyProvider : ReactiveObject, IAssemblyProvider, IDisposable
     {
         private string _path;
-        private List<Assembly> _cachedAssemblies = new List<Assembly>();
-        private ISubject<List<Assembly>> directoryChangedSubject;
-        private IObservable<List<Assembly>> directoryChangedObservable;
+        private List<IModuleInfo> _cachedAssemblies = new List<IModuleInfo>();
+        private ISubject<List<IModuleInfo>> directoryChangedSubject;
+        private IObservable<List<IModuleInfo>> directoryChangedObservable;
 
         private ISubject<bool> hotplugSubject;
         private IObservable<bool> hotpluggedObservable;
@@ -43,7 +44,7 @@ namespace ReactiveAddins
             this.IsCandidateAssembly = assembly => !assembly.FullName.StartsWith("Microsoft.") && !assembly.FullName.StartsWith("System.");
             this.IsCandidateCompilationLibrary = library => library.Name != "NETStandard.Library" && !library.Name.StartsWith("Microsoft.") && !library.Name.StartsWith("System.");
 
-            this.directoryChangedSubject = new Subject<List<Assembly>>();
+            this.directoryChangedSubject = new Subject<List<IModuleInfo>>();
             this.hotplugSubject = new Subject<bool>();
 
             this.directoryChangedObservable = directoryChangedSubject.AsObservable();
@@ -57,7 +58,7 @@ namespace ReactiveAddins
               });
         }
 
-        public IEnumerable<Assembly> GetAssemblies(string path)
+        public IEnumerable<IModuleInfo> GetAssemblies(string path)
         {
             _path.ThrowIfNotNull<ArgumentException>(PATH_ALLREADY_SET);
             _path = path;
@@ -71,9 +72,9 @@ namespace ReactiveAddins
 
         
 
-        private IEnumerable<Assembly> GetAssemblies()
+        private IEnumerable<IModuleInfo> GetAssemblies()
         {
-            List<Assembly> assemblies = new List<Assembly>();
+            List<IModuleInfo> assemblies = new List<IModuleInfo>();
             assemblies.AddRange(this.GetAssembliesFromPath(_path));
             assemblies.AddRange(this.GetAssembliesFromDependencyContext());
             _cachedAssemblies = assemblies;
@@ -81,9 +82,9 @@ namespace ReactiveAddins
             return assemblies;
         }
 
-        private IEnumerable<Assembly> GetAssembliesFromPath(string path)
+        private IEnumerable<IModuleInfo> GetAssembliesFromPath(string path)
         {
-            List<Assembly> assemblies = new List<Assembly>();
+            List<IModuleInfo> assemblies = new List<IModuleInfo>();
 
             if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
             {
@@ -99,7 +100,7 @@ namespace ReactiveAddins
 
                         if (this.IsCandidateAssembly(assembly))
                         {
-                            assemblies.Add(assembly);
+                            assemblies.Add(new ModuleInfo(assembly.FullName, extensionPath, assembly));
                             this.logger.LogInformation($"Assembly '{assembly.FullName}' is discovered and loaded");
                         }
                     }
@@ -124,9 +125,9 @@ namespace ReactiveAddins
         }
 
 
-        private IEnumerable<Assembly> GetAssembliesFromDependencyContext()
+        private IEnumerable<IModuleInfo> GetAssembliesFromDependencyContext()
         {
-            List<Assembly> assemblies = new List<Assembly>();
+            List<IModuleInfo> assemblies = new List<IModuleInfo>();
 
             this.logger.LogInformation("Discovering and loading assemblies from DependencyContext");
 
@@ -139,7 +140,7 @@ namespace ReactiveAddins
                     try
                     {
                         assembly = Assembly.Load(new AssemblyName(compilationLibrary.Name));
-                        assemblies.Add(assembly);
+                        assemblies.Add(new ModuleInfo(assembly.FullName,string.Empty, assembly));
                         this.logger.LogInformation($"Assembly '{assembly.FullName}' is discovered and loaded");
                     }
 

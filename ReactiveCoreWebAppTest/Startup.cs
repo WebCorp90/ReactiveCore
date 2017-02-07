@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using ReactiveCoreAddins;
-using Microsoft.DotNet.PlatformAbstractions;
-using System.IO;
-using Microsoft.Extensions.PlatformAbstractions;
+using ReactiveAddins;
 
 namespace ReactiveCoreWebAppTest
 {
@@ -35,10 +29,10 @@ namespace ReactiveCoreWebAppTest
             app.Run(async (context) =>
             {
                 await context.Response.WriteAsync("Hello World!\n");
-                var assemblies=await ap.GetAssembliesAsync(@"e:\test");
+                var assemblies=ap.GetAssemblies(@"e:\test");
                 foreach (var a in assemblies)
                 {
-                    await context.Response.WriteAsync($"{a.FullName}\n"); 
+                    await context.Response.WriteAsync($"{a.Name}\n"); 
                 }
                 await context.Response.WriteAsync($"{BinPath(env)}\n");
             });

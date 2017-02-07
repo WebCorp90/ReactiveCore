@@ -28,12 +28,12 @@ namespace ReactiveShop.Web
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddMvcCore(options =>
+            var builder=services.AddMvcCore(options =>
             {
                 //  options.Filters.Add
             });
 
-            services.AddModules("/");
+            services.AddModules("/",builder);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

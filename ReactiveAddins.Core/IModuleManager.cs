@@ -5,6 +5,7 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace ReactiveAddins
 {
@@ -16,10 +17,12 @@ namespace ReactiveAddins
 
         void AddModule(IModuleInfo module);
 
-        IEnumerable<IModuleInfo> All(Func<IModuleInfo, bool> predicate);
+        IEnumerable<IModuleInfo> All(Func<IModuleInfo, bool> predicate=null);
+
+        void Not(Func<IModuleInfo, bool> predicate, Action<IModuleInfo> action);
 
         IModuleInfo GetByName(string name);
-
+        
     }
 
     #region Contract
@@ -31,7 +34,7 @@ namespace ReactiveAddins
             Contract.Requires<ArgumentNullException>(module != null);
         }
 
-        public IEnumerable<IModuleInfo> All(Func<IModuleInfo, bool> predicate)
+        public IEnumerable<IModuleInfo> All(Func<IModuleInfo, bool> predicate=null)
         {
             Contract.Ensures(Contract.Result<IEnumerable<IModuleInfo>>() != null);
             return default(IEnumerable<IModuleInfo>);
@@ -49,6 +52,11 @@ namespace ReactiveAddins
         public void LoadFromPath(string path)
         {
             Contract.Requires<ArgumentNullException>(path != null);
+        }
+
+        public void Not(Func<IModuleInfo, bool> predicate, Action<IModuleInfo> action)
+        {
+            
         }
     }
     #endregion

@@ -14,6 +14,8 @@ namespace ReactiveAddins
         Assembly Assembly { get; }
 
         string Path { get; }
+
+        bool Candidate { get; set; }
     }
 
     [ContractClassFor(typeof(IModuleInfo))]
@@ -26,6 +28,16 @@ namespace ReactiveAddins
                 Contract.Ensures(Contract.Result<Assembly>() != null);
                 return default(Assembly);
             }
+        }
+
+        public bool Candidate
+        {
+            get
+            {
+                
+                return default(bool);
+            }
+            set { }
         }
 
         public string Name

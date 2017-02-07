@@ -52,7 +52,7 @@ namespace ReactiveAddins
                 //  options.Filters.Add
             });
 
-            services.AddModules(mvc,ModulePath);
+            services.AddModules(ModulePath, mvc);
 
             
 
