@@ -21,6 +21,9 @@ namespace Webcorp.unite
     using System.Globalization;
 	using System.Collections.Generic;
 	using System.Runtime.Serialization;
+#if REACTIVE_CORE
+	using ReactiveCore;
+#endif
 #if MONGO
 	using MongoDB.Bson.Serialization.Attributes;
 	using MongoDB.Bson.Serialization.Serializers;
@@ -177,7 +180,11 @@ namespace Webcorp.unite
 
             set
             {
+			#if REACTIVE_CORE
+				this.RaiseAndSetIfChanged(ref this.value, Parse(value, CultureInfo.InvariantCulture).value);
+			#else
                 this.value = Parse(value, CultureInfo.InvariantCulture).value;
+			#endif
             }
         }
 
@@ -772,10 +779,10 @@ namespace Webcorp.unite
 #endif
 	public enum ElectricConductanceUnit{
 		Siemens,
-Millisiemens,
-Microsiemens,
-Kilosiemens,
-Megasiemens
+		Millisiemens,
+		Microsiemens,
+		Kilosiemens,
+		Megasiemens
 	}
 
 }

@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Webcorp.unite;
 
 namespace ReactiveShop.Core.Domain.Catalog
 {
@@ -70,6 +71,11 @@ namespace ReactiveShop.Core.Domain.Catalog
         public string Complementary { get; set; }
 
         /// <summary>
+        /// Get or set Product Type
+        /// </summary>
+        public ProductType ProductType { get; set; }
+
+        /// <summary>
         /// Gets or sets the full description
         /// </summary>
         [DataMember]
@@ -116,6 +122,139 @@ namespace ReactiveShop.Core.Domain.Catalog
 		/// </summary>
 		[DataMember]
         public bool LimitedToStores { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is ship enabled
+        /// </summary>
+        [DataMember]
+        public bool IsShipEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity is free shipping
+        /// </summary>
+        [DataMember]
+        public bool IsFreeShipping { get; set; }
+
+
+
+        /// <summary>
+        /// Gets or sets the Global Trade Item Number (GTIN). These identifiers include UPC (in North America), EAN (in Europe), JAN (in Japan), and ISBN (for books).
+        /// </summary>
+        [DataMember]
+        public string Gtin { get; set; }
+
+
+        /// <summary>
+		/// Gets or sets a value indicating whether the product is gift card
+		/// </summary>
+		[DataMember]
+        public bool IsGiftCard { get; set; }
+
+        /// <summary>
+		/// Gets or sets the gift card type identifier
+		/// </summary>
+		[DataMember]
+        public int GiftCardTypeId { get; set; }
+
+        /// <summary>
+		/// Gets or sets a value indicating whether to disable buy (Add to cart) button
+		/// </summary>
+		[DataMember]
+        public bool DisableBuyButton { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to disable "Add to wishlist" button
+        /// </summary>
+        [DataMember]
+        public bool DisableWishlistButton { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this item is available for Pre-Order
+        /// </summary>
+        [DataMember]
+        public bool AvailableForPreOrder { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to show "Call for Pricing" or "Call for quote" instead of price
+        /// </summary>
+        [DataMember]
+        public bool CallForPrice { get; set; }
+
+        /// <summary>
+        /// Gets or sets the mass of the product
+        /// can be calculated
+        /// </summary>
+        [DataMember]
+        public Mass Mass { get; set; }
+
+        /// <summary>
+        /// Gets or set if the mass must be auto calculated from length/width/Thickness/Density
+        /// </summary>
+        [DataMember]
+        public bool MassAutoCalculated { get; set; }
+
+        /// <summary>
+        /// Get or sets the length of the product
+        /// </summary>
+        [DataMember]
+        public Length Length { get; set; }
+
+        /// <summary>
+        /// Gets or set Width of the product
+        /// </summary>
+        [DataMember]
+        public Length Width { get; set; }
+
+        /// <summary>
+        /// Gets or set the thickness of the product
+        /// </summary>
+        [DataMember]
+        public Length Thickness { get; set; }
+
+        /// <summary>
+        /// Gets or sets the material of the product
+        /// </summary>
+        [DataMember]
+        public Material Material { get; set; }
+
+        /// <summary>
+        /// Gets or set Linear mass for profile per exemple Carre/HEA/ Plat
+        /// </summary>
+        [DataMember]
+        public MassLinear MassLinear { get; set; }
+
+
+        /// <summary>
+		/// Gets or sets a value indicating whether to display stock availability
+		/// </summary>
+		[DataMember]
+        public bool DisplayStockAvailability { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether to display stock quantity
+        /// </summary>
+        [DataMember]
+        public bool DisplayStockQuantity { get; set; }
+
+        public bool GereEnStock { get; set; }
+
+        public bool AutoriseStockNegatif { get; set; }
+
+        public double StockPhysique { get; set; }
+
+        public double  QuantiteReservee { get; set; }
+
+        public double QuantiteAttendue { get; set; }
+
+        public double  StockMini { get; set; }
+
+        public double  StockMaxi { get; set; }
+
+        public double ReapproMini { get; set; }
+
+        public double ReapproLot { get; set; }
+
+
         #endregion
     }
 }
