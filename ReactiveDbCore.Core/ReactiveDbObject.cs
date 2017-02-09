@@ -1,14 +1,10 @@
 ﻿using ReactiveCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ReactiveDbCore
 {
-    public class ReactiveDbObject : ReactiveObject,IReactiveDbObject
+    public class ReactiveDbObject : ReactiveObject, IReactiveDbObject
     {
         #region events
         public event ReactiveDbEventHandler onAdded;
@@ -34,7 +30,7 @@ namespace ReactiveDbCore
 
 
         public event ValidationEntityEventHandler onValidationError;
-        void IReactiveDbObject.RaiseEntityValidationError(ValidationEntityEventArg args) => this.onValidationError?.Invoke( args);
+        void IReactiveDbObject.RaiseEntityValidationError(ValidationEntityEventArg args) => this.onValidationError?.Invoke(args);
 
         #endregion
 

@@ -1,0 +1,399 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CC9B3B19-D634-483B-9DB9-33950A14DB2C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ReactiveUnits.NET461</RootNamespace>
+    <AssemblyName>ReactiveUnits.NET461</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\ReactiveUnits\IUnit.cs">
+      <Link>IUnit.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\IUnitProvider.cs">
+      <Link>IUnitProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Acceleration.cs">
+      <Link>Operators\Acceleration.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Angle.cs">
+      <Link>Operators\Angle.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Area.cs">
+      <Link>Operators\Area.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Capacitance.cs">
+      <Link>Operators\Capacitance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Currency.cs">
+      <Link>Operators\Currency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Density.cs">
+      <Link>Operators\Density.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\ElectricCharge.cs">
+      <Link>Operators\ElectricCharge.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\ElectricConductance.cs">
+      <Link>Operators\ElectricConductance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\ElectricCurrent.cs">
+      <Link>Operators\ElectricCurrent.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\ElectricResistance.cs">
+      <Link>Operators\ElectricResistance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\ElectricVoltage.cs">
+      <Link>Operators\ElectricVoltage.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Energy.cs">
+      <Link>Operators\Energy.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Force.cs">
+      <Link>Operators\Force.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Fraction.cs">
+      <Link>Operators\Fraction.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Length.cs">
+      <Link>Operators\Length.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\LinearMomentum.cs">
+      <Link>Operators\LinearMomentum.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Mass.cs">
+      <Link>Operators\Mass.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\MassConcentration.cs">
+      <Link>Operators\MassConcentration.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\MassConcentrationInWater.cs">
+      <Link>Operators\MassConcentrationInWater.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\MassCurrency.cs">
+      <Link>Operators\MassCurrency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\MassLinear.cs">
+      <Link>Operators\MassLinear.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\MassMomentOfInertia.cs">
+      <Link>Operators\MassMomentOfInertia.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Power.cs">
+      <Link>Operators\Power.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Pressure.cs">
+      <Link>Operators\Pressure.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\TauxHorraire.cs">
+      <Link>Operators\TauxHorraire.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Temperature.cs">
+      <Link>Operators\Temperature.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Time.cs">
+      <Link>Operators\Time.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Torque.cs">
+      <Link>Operators\Torque.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\TypographicLength.cs">
+      <Link>Operators\TypographicLength.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\TypographicResolution.cs">
+      <Link>Operators\TypographicResolution.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Velocity.cs">
+      <Link>Operators\Velocity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\Volume.cs">
+      <Link>Operators\Volume.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\operators\VolumetricWaterContent.cs">
+      <Link>Operators\VolumetricWaterContent.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\UnitAttribute.cs">
+      <Link>UnitAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Acceleration.cs">
+      <Link>unites\Acceleration.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Action.cs">
+      <Link>unites\Action.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\AmountOfSubstance.cs">
+      <Link>unites\AmountOfSubstance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Angle.cs">
+      <Link>unites\Angle.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\AngularFrequency.cs">
+      <Link>unites\AngularFrequency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Area.cs">
+      <Link>unites\Area.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\AreaCurrency.cs">
+      <Link>unites\AreaCurrency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\AreaLinear.cs">
+      <Link>unites\AreaLinear.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\AreaMass.cs">
+      <Link>unites\AreaMass.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Capacitance.cs">
+      <Link>unites\Capacitance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Currency.cs">
+      <Link>unites\Currency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Curvature.cs">
+      <Link>unites\Curvature.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Density.cs">
+      <Link>unites\Density.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\DynamicViscosity.cs">
+      <Link>unites\DynamicViscosity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricCharge.cs">
+      <Link>unites\ElectricCharge.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricConductance.cs">
+      <Link>unites\ElectricConductance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricConductivity.cs">
+      <Link>unites\ElectricConductivity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricCurrent.cs">
+      <Link>unites\ElectricCurrent.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricDipole.cs">
+      <Link>unites\ElectricDipole.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricResistance.cs">
+      <Link>unites\ElectricResistance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\ElectricVoltage.cs">
+      <Link>unites\ElectricVoltage.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Energy.cs">
+      <Link>unites\Energy.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\FirstMomentOfArea.cs">
+      <Link>unites\FirstMomentOfArea.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Flow.cs">
+      <Link>unites\Flow.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Force.cs">
+      <Link>unites\Force.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Fraction.cs">
+      <Link>unites\Fraction.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Frequency.cs">
+      <Link>unites\Frequency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\FuelConsumption.cs">
+      <Link>unites\FuelConsumption.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\FuelEconomy.cs">
+      <Link>unites\FuelEconomy.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\HeatCapacity.cs">
+      <Link>unites\HeatCapacity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Illuminance.cs">
+      <Link>unites\Illuminance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Inductance.cs">
+      <Link>unites\Inductance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\InformationEntropy.cs">
+      <Link>unites\InformationEntropy.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\KinematicViscosity.cs">
+      <Link>unites\KinematicViscosity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Length.cs">
+      <Link>unites\Length.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\LinearMomentum.cs">
+      <Link>unites\LinearMomentum.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Luminance.cs">
+      <Link>unites\Luminance.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\LuminousFlux.cs">
+      <Link>unites\LuminousFlux.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\LuminousIntensity.cs">
+      <Link>unites\LuminousIntensity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MagneticFlux.cs">
+      <Link>unites\MagneticFlux.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MagneticFluxDensity.cs">
+      <Link>unites\MagneticFluxDensity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Mass.cs">
+      <Link>unites\Mass.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MassConcentration.cs">
+      <Link>unites\MassConcentration.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MassConcentrationInWater.cs">
+      <Link>unites\MassConcentrationInWater.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MassCurrency.cs">
+      <Link>unites\MassCurrency.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MassLinear.cs">
+      <Link>unites\MassLinear.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\MassMomentOfInertia.cs">
+      <Link>unites\MassMomentOfInertia.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Power.cs">
+      <Link>unites\Power.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\PrecipitationIntensity.cs">
+      <Link>unites\PrecipitationIntensity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Pressure.cs">
+      <Link>unites\Pressure.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Radiation.cs">
+      <Link>unites\Radiation.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\RadiationAbsorbedDose.cs">
+      <Link>unites\RadiationAbsorbedDose.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\RadiationEquivalentDose.cs">
+      <Link>unites\RadiationEquivalentDose.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\RadiationExposure.cs">
+      <Link>unites\RadiationExposure.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\RotationalStiffness.cs">
+      <Link>unites\RotationalStiffness.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\SecondMomentOfArea.cs">
+      <Link>unites\SecondMomentOfArea.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\SectionModulus.cs">
+      <Link>unites\SectionModulus.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\SolidAngle.cs">
+      <Link>unites\SolidAngle.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Stiffness.cs">
+      <Link>unites\Stiffness.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\TauxHorraire.cs">
+      <Link>unites\TauxHorraire.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Temperature.cs">
+      <Link>unites\Temperature.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\TemperatureChange.cs">
+      <Link>unites\TemperatureChange.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\TemperatureDifference.cs">
+      <Link>unites\TemperatureDifference.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Time.cs">
+      <Link>unites\Time.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\TimeSquared.cs">
+      <Link>unites\TimeSquared.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Torque.cs">
+      <Link>unites\Torque.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\TypographicLength.cs">
+      <Link>unites\TypographicLength.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\TypographicResolution.cs">
+      <Link>unites\TypographicResolution.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Velocity.cs">
+      <Link>unites\Velocity.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\VelocitySquared.cs">
+      <Link>unites\VelocitySquared.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\Volume.cs">
+      <Link>unites\Volume.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\unites\VolumetricWaterContent.cs">
+      <Link>unites\VolumetricWaterContent.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\UnitProvider.cs">
+      <Link>UnitProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\UnitProviderExtensions.cs">
+      <Link>UnitProviderExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\UnitTypeConverter.cs">
+      <Link>UnitTypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveUnits\Utilities.cs">
+      <Link>Utilities.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ReactiveCore.NET461\ReactiveCore.NET461.csproj">
+      <Project>{21e00f1e-a1fc-4f30-8af2-c1c357b5122c}</Project>
+      <Name>ReactiveCore.NET461</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CC861305-BA94-435C-B08C-5605F6113E6E}</ProjectGuid>
+    <ProjectGuid>{30093D43-D9C2-4FCD-A005-1AA57DD36FE2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ReactiveDbCore</RootNamespace>
-    <AssemblyName>ReactiveDbCore</AssemblyName>
+    <RootNamespace>ReactiveShop.Core.NET461</RootNamespace>
+    <AssemblyName>ReactiveShop.Core.NET461</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -30,14 +30,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ReactiveUI, Version=7.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reactiveui-core.7.1.0\lib\Net45\ReactiveUI.dll</HintPath>
       <Private>True</Private>
@@ -70,68 +62,72 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Windows" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\ReactiveDbCore.Core\DbContextExtensions.cs">
-      <Link>DbContextExtensions.cs</Link>
+    <Compile Include="..\ReactiveShop.Core\BaseEntity.cs">
+      <Link>BaseEntity.cs</Link>
     </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\Interfaces.cs">
-      <Link>Interfaces.cs</Link>
+    <Compile Include="..\ReactiveShop.Core\Domain\Catalog\Material.cs">
+      <Link>Domain\Catalog\Material.cs</Link>
     </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\IReactiveDbObject.cs">
-      <Link>IReactiveDbObject.cs</Link>
+    <Compile Include="..\ReactiveShop.Core\Domain\Catalog\Product.cs">
+      <Link>Domain\Catalog\Product.cs</Link>
     </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\IRepository.cs">
-      <Link>IRepository.cs</Link>
+    <Compile Include="..\ReactiveShop.Core\Domain\Catalog\ProductType.cs">
+      <Link>Domain\Catalog\ProductType.cs</Link>
     </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\IUnitOfWork.cs">
-      <Link>IUnitOfWork.cs</Link>
+    <Compile Include="..\ReactiveShop.Core\IAuditable.cs">
+      <Link>IAuditable.cs</Link>
     </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\ObjectMixins.cs">
-      <Link>ObjectMixins.cs</Link>
-    </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\ReactiveDbContext.cs">
-      <Link>ReactiveDbContext.cs</Link>
-    </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\ReactiveDbCoreException.cs">
-      <Link>ReactiveDbCoreException.cs</Link>
-    </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\ReactiveDbObject.cs">
-      <Link>ReactiveDbObject.cs</Link>
-    </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\ReactiveExtensions.cs">
-      <Link>ReactiveExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\Repository.cs">
-      <Link>Repository.cs</Link>
-    </Compile>
-    <Compile Include="..\ReactiveDbCore.Core\ValidationEntityError.cs">
-      <Link>ValidationEntityError.cs</Link>
+    <Compile Include="..\ReactiveShop.Core\ISoftDeletable.cs">
+      <Link>ISoftDeletable.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PropertyChanged.NET461.Helpers\PropertyChanged.NET461.Helpers.csproj">
-      <Project>{85AC958C-0C88-45C6-B4DB-395A1423404E}</Project>
+      <Project>{85ac958c-0c88-45c6-b4db-395a1423404e}</Project>
       <Name>PropertyChanged.NET461.Helpers</Name>
     </ProjectReference>
     <ProjectReference Include="..\ReactiveCore.NET461\ReactiveCore.NET461.csproj">
       <Project>{21e00f1e-a1fc-4f30-8af2-c1c357b5122c}</Project>
       <Name>ReactiveCore.NET461</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ReactiveDbCore.NET461\ReactiveDbCore.NET461.csproj">
+      <Project>{cc861305-ba94-435c-b08c-5605f6113e6e}</Project>
+      <Name>ReactiveDbCore.NET461</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReactiveHelpers.NET461\ReactiveHelpers.NET461.csproj">
+      <Project>{f5221828-412c-470f-89ad-b8e0259d089f}</Project>
+      <Name>ReactiveHelpers.NET461</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReactiveUnits.NET461\ReactiveUnits.NET461.csproj">
+      <Project>{cc9b3b19-d634-483b-9db9-33950a14db2c}</Project>
+      <Name>ReactiveUnits.NET461</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Ce projet fait référence à des packages NuGet qui sont manquants sur cet ordinateur. Utilisez l'option de restauration des packages NuGet pour les télécharger. Pour plus d'informations, consultez http://go.microsoft.com/fwlink/?LinkID=322105. Le fichier manquant est : {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

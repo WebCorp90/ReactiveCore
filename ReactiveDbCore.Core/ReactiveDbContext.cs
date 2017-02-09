@@ -1,10 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#if CORE
+using Microsoft.EntityFrameworkCore;
+#else
+using System.Data.Entity;
+#endif
 using PropertyChangedCore.Helpers;
 using ReactiveCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+
 using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -32,7 +37,17 @@ namespace ReactiveDbCore
 
         #region Constructors
         public ReactiveDbContext() : base() { Initialize(); }
+#if CORE
         public ReactiveDbContext(DbContextOptions options) : base(options) { Initialize(); }
+#else
+        public ReactiveDbContext(string nameOrConnectionString) :base(nameOrConnectionString)
+        {
+
+        }
+#endif
+
+
+
         private void Initialize()
         {
             this.errorSubject = new Subject<IReactiveDbContextEventArgs>();
@@ -47,14 +62,17 @@ namespace ReactiveDbCore
         }
 
 
-        #endregion
+#endregion
 
         #region Properties
         [Reactive]
         public bool TriggersEnabled { get; set; } = true;
-        #endregion
+#endregion
 
         #region SaveChanges
+
+
+#if CORE
         public override int SaveChanges() => this.SaveChanges(true);
 
         public override int SaveChanges(bool acceptAllChangesOnSuccess)=> TriggersEnabled ? this.SaveChangesWithTriggers(base.SaveChanges, acceptAllChangesOnSuccess) : base.SaveChanges(acceptAllChangesOnSuccess);
@@ -62,8 +80,26 @@ namespace ReactiveDbCore
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken)) => TriggersEnabled ? this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, cancellationToken) : base.SaveChangesAsync(cancellationToken);
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken)) => TriggersEnabled ? this.SaveChangesWithTriggersAsync(base.SaveChangesAsync, cancellationToken) : base.SaveChangesAsync(cancellationToken);
+#else
+        public int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            
+            return base.SaveChanges();
+        }
+        public Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,CancellationToken cancellationToken)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
 
-        #endregion
+        public override int SaveChanges() => TriggersEnabled ? this.SaveChangesWithTriggers(SaveChanges, true) : SaveChanges(true);
+
+        public override Task<int> SaveChangesAsync( CancellationToken cancellationToken = default(CancellationToken)) => TriggersEnabled ? this.SaveChangesWithTriggersAsync(SaveChangesAsync, cancellationToken) : base.SaveChangesAsync(cancellationToken);
+#endif
+        
+
+
+        
+#endregion
 
         #region IReactiveObject
         public event PropertyChangingEventHandler PropertyChanging;
@@ -78,7 +114,7 @@ namespace ReactiveDbCore
         public IObservable<IReactivePropertyChangedEventArgs<IReactiveObject>> Changed => ((IReactiveObject)this).getChangedObservable();
 
 
-        #endregion
+#endregion
 
         #region ERROR
         public IObservable<IReactiveDbContextEventArgs> Error => this.errorObservable;
@@ -88,7 +124,7 @@ namespace ReactiveDbCore
             errorSubject.OnNext(new ReactiveDbContextEventArgs(this, ex));
         }
 
-        #endregion
+#endregion
 
         #region Validation
         public IObservable<ValidationEntitiesException> ValidationError => this.validationErrorObservable;
@@ -122,7 +158,7 @@ namespace ReactiveDbCore
             }
             if(errors.Count>0) throw new ValidationEntitiesException(new ValidationEntitiesEventArg(this,errors));
         }
-        #endregion
+#endregion
 
     }
 }

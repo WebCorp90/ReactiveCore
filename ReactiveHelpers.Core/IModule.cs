@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿#if CORE
+using Microsoft.Extensions.DependencyInjection;
+#endif
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,25 +1,42 @@
-﻿using ReactiveDbCore;
+﻿using PropertyChangedCore.Helpers;
+using ReactiveDbCore;
+using ReactiveHelpers.Core;
 using System;
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
 
 namespace ReactiveShop.Core
 {
     /// <summary>
     /// Base Class for all Shop Entities stored in DB
     /// </summary>
-    public abstract partial class BaseEntity:ReactiveDbObject
+    public abstract partial class BaseEntity:ReactiveDbObject,IInitializable
     {
+        /// <summary>
+        /// Blank Ctor for EntityFactory and EF
+        /// </summary>
+        public BaseEntity()
+        {
+            Initialize();
+        }
         /// <summary>
         /// Gets or sets the entity identifier
         /// </summary>
 		[DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //[Reactive]
         public int Id { get; set; }
+
+
+        /// <summary>
+        /// Get or set the company code (ex: 001, or 123)
+        /// must be on three characters
+        /// </summary>
+        [DataMember,Required,StringLength(maximumLength:3,MinimumLength =3)]
+        //[Reactive]
+        public string Societe { get; set; }
 
         /// <summary>
         /// Get Unproxied Type
@@ -125,5 +142,12 @@ namespace ReactiveShop.Core
         {
             return !this.IsTransientRecord() && !other.IsTransientRecord() && this.Id == other.Id;
         }
+
+        #region IInitializable
+        public virtual void Initialize()
+        {
+           
+        }
+        #endregion
     }
 }

@@ -1,24 +1,38 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
+﻿
+
 using System;
 using System.Collections.Generic;
-#if DEBUG
-using System.Diagnostics;
-#endif
+
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 #if CORE
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System.Reflection;
+#else
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity;
+#endif
+
+#if DEBUG
+using System.Diagnostics;
 #endif
 namespace ReactiveDbCore
 {
-    internal class EntityEntryComparer : IEqualityComparer<EntityEntry>
+    internal class EntityEntryComparer : IEqualityComparer<DbEntityEntry>
     {
         private EntityEntryComparer() { }
+#if CORE
         public bool Equals(EntityEntry x, EntityEntry y) => ReferenceEquals(x.Entity, y.Entity);
         public int GetHashCode(EntityEntry obj) => obj.Entity.GetHashCode();
+#else
+        public bool Equals(DbEntityEntry x, DbEntityEntry y) => ReferenceEquals(x.Entity, y.Entity);
+
+        public int GetHashCode(DbEntityEntry obj) => obj.Entity.GetHashCode();
+#endif
         public static readonly EntityEntryComparer Default = new EntityEntryComparer();
     }
 
@@ -49,10 +63,15 @@ namespace ReactiveDbCore
 
         private static List<Action> RaiseBeforeEvents<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
         {
+            
             Contract.Requires(dbContext != null);
             Contract.Ensures(Contract.Result<List<Action>>() != null);
             var entries = dbContext.GetReactiveDbObjectEntries();
+#if CORE
             var triggeredEntries = new List<EntityEntry>(entries.Count);
+#else
+            var triggeredEntries = new List<DbEntityEntry>(entries.Count);
+#endif
             List<Action> afterEvents = new List<Action>(entries.Count);
             while (entries.Any())
             {
@@ -114,16 +133,29 @@ namespace ReactiveDbCore
             });
             return contextResult || entityResult;
         }
-
-        public static List<EntityEntry> GetReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
-            =>
 #if CORE
-            dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).GetTypeInfo().IsAssignableFrom(e.Entity.GetType()); }).ToList();
-#else
-            dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).IsAssignableFrom(e.Entity.GetType()); }).ToList();
-#endif
+        public static List<EntityEntry> GetReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
+            => dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).GetTypeInfo().IsAssignableFrom(e.Entity.GetType()); }).ToList();
+        
         public static List<EntityEntry> GetValidatableReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
             => dbContext.GetReactiveDbObjectEntries().Where(e => { return e.State == EntityState.Added || e.State == EntityState.Modified; }).ToList();
+
+        public static BeforeAfterDbEvent<TEntry> GetPairEvent<TEntry>(this TEntry entry) where TEntry : EntityEntry
+            => new BeforeAfterDbEvent<TEntry>(entry);
+#else
+        public static List<DbEntityEntry> GetReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
+        => dbContext.ChangeTracker.Entries().Where(e => { return typeof(IReactiveDbObject).IsAssignableFrom(e.Entity.GetType()); }).ToList();
+
+        public static List<DbEntityEntry> GetValidatableReactiveDbObjectEntries<TReactiveDbContext>(this TReactiveDbContext dbContext) where TReactiveDbContext : ReactiveDbContext
+            => dbContext.GetReactiveDbObjectEntries().Where(e => { return e.State == EntityState.Added || e.State == EntityState.Modified; }).ToList();
+
+        public static BeforeAfterDbEvent<TEntry> GetPairEvent<TEntry>(this TEntry entry) where TEntry : DbEntityEntry
+           => new BeforeAfterDbEvent<TEntry>(entry);
+#endif
+
+
+
+
 
 
         public static async Task<int> SaveChangesWithTriggersAsync<TReactiveDbContext>(this TReactiveDbContext dbContext, Func<Boolean, CancellationToken, Task<Int32>> baseSaveChangesAsync, Boolean acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
@@ -140,29 +172,33 @@ namespace ReactiveDbCore
             return dbContext.SaveChangesWithTriggersAsync(baseSaveChangesAsync, true, cancellationToken);
         }
 
-        public static BeforeAfterDbEvent<TEntry> GetPairEvent<TEntry>(this TEntry entry) where TEntry : EntityEntry
-        => new BeforeAfterDbEvent<TEntry>(entry);
+       
     }
-    public class BeforeAfterDbEvent<TEntry> where TEntry : EntityEntry
+    public class BeforeAfterDbEvent<TEntry> where TEntry :
+ #if CORE
+        EntityEntry
+#else
+        DbEntityEntry
+#endif
     {
         public BeforeAfterDbEvent(TEntry entry)
         {
             this.Entry = entry;
             switch (entry.State)
             {
-                case Microsoft.EntityFrameworkCore.EntityState.Detached:
+                case EntityState.Detached:
                     break;
-                case Microsoft.EntityFrameworkCore.EntityState.Unchanged:
+                case EntityState.Unchanged:
                     break;
-                case Microsoft.EntityFrameworkCore.EntityState.Deleted:
+                case EntityState.Deleted:
                     Before = ((IReactiveDbObject)entry.Entity).RaiseDbEntityDeleting;
                     After = ((IReactiveDbObject)entry.Entity).RaiseDbEntityDeleted;
                     break;
-                case Microsoft.EntityFrameworkCore.EntityState.Modified:
+                case EntityState.Modified:
                     Before = ((IReactiveDbObject)entry.Entity).RaiseDbEntityUpdating;
                     After = ((IReactiveDbObject)entry.Entity).RaiseDbEntityUpdated;
                     break;
-                case Microsoft.EntityFrameworkCore.EntityState.Added:
+                case EntityState.Added:
                     Before = ((IReactiveDbObject)entry.Entity).RaiseDbEntityAdding;
                     After = ((IReactiveDbObject)entry.Entity).RaiseDbEntityAdded;
                     break;

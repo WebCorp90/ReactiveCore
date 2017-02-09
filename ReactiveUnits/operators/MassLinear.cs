@@ -18,6 +18,17 @@ namespace Webcorp.unite
                 return new Mass(0);
             }
         }
+        public static Mass operator *(MassLinear m, Length d)
+        {
+            try
+            {
+                return new Mass(m.Value * d.Value);
+            }
+            catch
+            {
+                return new Mass(0);
+            }
+        }
         public static Currency operator *(MassLinear m, MassCurrency d)
         {
             try {

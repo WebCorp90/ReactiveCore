@@ -1,9 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿#if CORE
+using Microsoft.EntityFrameworkCore;
+#else
+using System.Data.Entity;
+#endif
 using ReactiveCore;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
+
 
 namespace ReactiveDbCore
 {
@@ -41,7 +46,11 @@ namespace ReactiveDbCore
 
         public async Task AddAsync(T entity)
         {
+#if CORE
             await DbSet.AddAsync(entity);
+#else       
+            await Task.Run(() =>  Add(entity));
+#endif
         }
 
         public void Delete(T entity)
