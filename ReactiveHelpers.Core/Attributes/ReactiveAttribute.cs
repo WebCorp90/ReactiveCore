@@ -1,6 +1,6 @@
-﻿/*using System;
+﻿using System;
 
-namespace PropertyChangedCore.Helpers
+namespace ReactiveHelpers.Core
 {
     /// <summary>
     /// Mark for attribute that is reactive 
@@ -12,4 +12,4 @@ namespace PropertyChangedCore.Helpers
     public class ReactiveAttribute : Attribute
     {
     }
-}*/
+}

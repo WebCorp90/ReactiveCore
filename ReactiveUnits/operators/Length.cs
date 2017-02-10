@@ -59,7 +59,12 @@ namespace Webcorp.unite
         /// <returns> The result of the operator. </returns>
         public static Area operator *(Length x, Length y)
         {
-            return new Area(x.Value * y.Value);
+            double? value = 0;
+            value = x?.Value ?? value;
+            value = value * (y?.Value ?? 0);
+
+            return new Area(value ?? 0);
+            //return new Area(x.Value * y.Value);
         }
 
         /// <summary>

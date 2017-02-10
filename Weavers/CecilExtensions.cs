@@ -4,7 +4,7 @@ using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 
-namespace PropertyChangedCore.Fody
+namespace MyWeaver.Fody
 {
     public static class CecilExtensions
     {

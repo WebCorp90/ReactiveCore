@@ -27,7 +27,11 @@ namespace Webcorp.unite
         /// <returns> The result of the operator. </returns>
         public static Mass operator *(Volume x, Density y)
         {
-            return new Mass(x.Value * y.Value);
+            double? value = 0;
+            value = x?.Value ?? value;
+            value = value * (y?.Value ?? 0);
+            return new Mass(value ?? 0);
+            //return new Mass(x.Value * y.Value);
         }
 
         /// <summary>

@@ -41,7 +41,11 @@ namespace Webcorp.unite
         /// <returns> The result of the operator. </returns>
         public static Volume operator *(Area a1, Length a2)
         {
-            return new Volume(a1.value * a2.Value);
+            double? value = 0;
+            value = a1?.Value ?? value;
+            value = value * (a2?.Value ?? 0);
+            return new Volume(value ?? 0);
+           // return new Volume(a1.value * a2.Value);
         }
 
         /// <summary>

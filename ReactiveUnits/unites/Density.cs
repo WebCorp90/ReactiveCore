@@ -17,10 +17,11 @@
 namespace Webcorp.unite
 {
     using System;
-	using System.ComponentModel;
+    
     using System.Globalization;
-	using System.Collections.Generic;
-	using System.Runtime.Serialization;
+    using System.Collections.Generic;
+    using System.Runtime.Serialization;
+
 #if REACTIVE_CORE
 	using ReactiveCore;
 #endif
@@ -29,11 +30,14 @@ namespace Webcorp.unite
 	using MongoDB.Bson.Serialization.Serializers;
     using MongoDB.Bson.Serialization;
 #endif
-
+#if !CORE
+    using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
+#endif
     /// <summary>
     /// Represents the density quantity.
     /// </summary>
-    
+
 #if !CORE
     [Serializable]
 #endif
@@ -213,6 +217,7 @@ namespace Webcorp.unite
         /// </remarks>
         //[XmlText]
         [DataMember]
+        [Key]
 		//[BsonSerializer(typeof(UnitSerializer))]
 		//[BsonSerializer(typeof(DensitySerializer))]
         public string FValue
@@ -225,11 +230,11 @@ namespace Webcorp.unite
 
             set
             {
-			#if REACTIVE_CORE
+#if REACTIVE_CORE
 				this.RaiseAndSetIfChanged(ref this.value, Parse(value, CultureInfo.InvariantCulture).value);
-			#else
+#else
                 this.value = Parse(value, CultureInfo.InvariantCulture).value;
-			#endif
+#endif
             }
         }
 

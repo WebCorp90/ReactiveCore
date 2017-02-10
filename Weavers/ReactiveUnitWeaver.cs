@@ -1,15 +1,12 @@
-﻿using System;
+﻿using MyWeaver.Fody;
+using System;
 using Mono.Cecil;
-using MyWeaver.Fody;
 
-namespace PropertyChangedCore.Fody
+namespace ReactiveUnit.Fody
 {
-    public  class PropertyChangedCoreWeaver : BaseWeaver, IWeaver
+    public class ReactiveUnitWeaver : BaseWeaver,IWeaver
     {
-        
-
-
-        public PropertyChangedCoreWeaver()
+        public ReactiveUnitWeaver():base()
         {
             LogInfo = s => { };
             LogError = s => { };
@@ -31,9 +28,7 @@ namespace PropertyChangedCore.Fody
 
         public  void Execute()
         {
-            new ReactivePropertyModule(this).Execute();
-            new ObservableAsPropertyModule(this).Execute();
-            new ReactiveDependencyPropertyModule(this).Execute();
+            new ReactiveUnitModule(this).Execute();
         }
     }
 }

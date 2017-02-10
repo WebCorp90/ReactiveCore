@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PropertyChangedCore.Fody
+namespace MyWeaver.Fody
 {
     public interface IExecutable
     {

@@ -474,7 +474,12 @@ namespace Webcorp.unite
         /// </returns>
         public static Length operator +(Length x, Length y)
         {
-            return new Length(x.value + y.value);
+            double? value = 0;
+            value = x?.Value ?? value;
+            value = value + (y?.Value ?? 0);
+           
+            return new Length(value ?? 0);
+            //return new Length(x.value + y.value);
         }
 
         /// <summary>
@@ -661,7 +666,12 @@ namespace Webcorp.unite
         /// </returns>
         public static Length operator -(Length x, Length y)
         {
-            return new Length(x.value - y.value);
+            double? value = 0;
+            value = x?.Value ?? value;
+            value = value - (y?.Value ?? 0);
+
+            return new Length(value ?? 0);
+            //return new Length(x.value - y.value);
         }
 
         /// <summary>

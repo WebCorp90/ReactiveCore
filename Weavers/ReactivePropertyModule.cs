@@ -4,6 +4,7 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using System.Diagnostics;
+using MyWeaver.Fody;
 
 namespace PropertyChangedCore.Fody
 {

@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using Mono.Cecil;
 using System.Diagnostics.Contracts;
 
-namespace PropertyChangedCore.Fody
+namespace MyWeaver.Fody
 {
     public abstract class Module:IExecutable
     {
-        public Module(PropertyChangedCoreWeaver weaver)
+        public Module(IWeaver weaver)
         {
             Contract.Requires(weaver != null);
             this.Weaver = weaver;
         }
 
-        public PropertyChangedCoreWeaver Weaver { get; private set; }
+        public IWeaver Weaver { get; private set; }
 
         public abstract void Execute();
     }

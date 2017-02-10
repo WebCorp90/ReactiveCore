@@ -1,12 +1,12 @@
-﻿/*using System;
+﻿using System;
 using System.Linq.Expressions;
 using System.Reflection;
-namespace PropertyChangedCore.Helpers
+namespace ReactiveHelpers.Core
 {
     public static class ObservableAsPropertyExtensions
     {
 
-        static PropertyInfo GetPropertyInfo(this LambdaExpression expression)
+       /* static PropertyInfo GetPropertyInfo(this LambdaExpression expression)
         {
             var current = expression.Body;
             var unary = current as UnaryExpression;
@@ -14,6 +14,6 @@ namespace PropertyChangedCore.Helpers
                 current = unary.Operand;
             var call = (MemberExpression)current;
             return (PropertyInfo)call.Member;
-        }
+        }*/
     }
-}*/
+}
