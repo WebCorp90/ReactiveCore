@@ -5,7 +5,11 @@ namespace MyWeaver.Fody
 {
     public interface IWeaver
     {
-         ModuleDefinition ModuleDefinition { get; set; }
+        IAssemblyResolver AssemblyResolver { get; set; }
+
+        ModuleDefinition ModuleDefinition { get; set; }
+
+         string AssemblyFilePath { get; set; }
 
         // Will log an MessageImportance.High message to MSBuild. 
         Action<string> LogInfo { get; set; }
@@ -16,5 +20,6 @@ namespace MyWeaver.Fody
         Action<string> LogWarning { get; set; }
 
         Action<string> LogDebug { get; set; }
+
     }
 }

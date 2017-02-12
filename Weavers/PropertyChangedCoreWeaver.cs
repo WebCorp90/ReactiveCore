@@ -29,6 +29,10 @@ namespace PropertyChangedCore.Fody
 
         public Action<string> LogDebug { get; set; }
 
+        public IAssemblyResolver AssemblyResolver { get; set; }
+
+        public string AssemblyFilePath { get; set; }
+
         public  void Execute()
         {
             new ReactivePropertyModule(this).Execute();

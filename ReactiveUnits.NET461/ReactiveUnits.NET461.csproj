@@ -381,12 +381,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ReactiveCore.NET461\ReactiveCore.NET461.csproj">
-      <Project>{21e00f1e-a1fc-4f30-8af2-c1c357b5122c}</Project>
-      <Name>ReactiveCore.NET461</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

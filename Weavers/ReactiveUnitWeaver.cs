@@ -26,6 +26,10 @@ namespace ReactiveUnit.Fody
 
         public Action<string> LogDebug { get; set; }
 
+        public IAssemblyResolver AssemblyResolver { get; set; }
+
+        public string AssemblyFilePath { get; set; }
+
         public  void Execute()
         {
             new ReactiveUnitModule(this).Execute();
