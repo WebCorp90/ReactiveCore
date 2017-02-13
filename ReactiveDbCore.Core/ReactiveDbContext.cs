@@ -3,18 +3,17 @@ using Microsoft.EntityFrameworkCore;
 #else
 using System.Data.Entity;
 #endif
-using PropertyChangedCore.Helpers;
 using ReactiveCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-
-using System.Linq;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using ReactiveHelpers.Core;
+
 namespace ReactiveDbCore
 {
     /// <summary>

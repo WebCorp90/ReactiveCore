@@ -118,13 +118,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PropertyChanged.NET461.Helpers\PropertyChanged.NET461.Helpers.csproj">
-      <Project>{85AC958C-0C88-45C6-B4DB-395A1423404E}</Project>
-      <Name>PropertyChanged.NET461.Helpers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ReactiveCore.NET461\ReactiveCore.NET461.csproj">
       <Project>{21e00f1e-a1fc-4f30-8af2-c1c357b5122c}</Project>
       <Name>ReactiveCore.NET461</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ReactiveHelpers.NET461\ReactiveHelpers.NET461.csproj">
+      <Project>{f5221828-412c-470f-89ad-b8e0259d089f}</Project>
+      <Name>ReactiveHelpers.NET461</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -22,8 +22,22 @@ namespace ReactiveShopCore.Test
         public void MyTestInitialize()
         {
             EffortProviderFactory.ResetDb();
+            
         }
-
+        public ShopDataContext Shop
+        {
+            get
+            {
+                string name = "ReactiveShopDatabase";
+                //string name = "";
+                if (name != string.Empty)
+                {
+                    Database.SetInitializer<ShopDataContext>(new DbInitializer());
+                    return new ShopDataContext(name);
+                }
+                return new ShopDataContext();
+            }
+        }
 
         [TestMethod]
         public void MyTestMethod()
@@ -64,7 +78,7 @@ namespace ReactiveShopCore.Test
             p.Width = Length.Metre * 1;
             p.Thickness = Length.Millimetre * 1.5;
             Assert.IsNotNull(p.Mass);
-            Assert.AreEqual(p.Mass,Mass.Kilogram* 0);
+            Assert.AreEqual(p.Mass, Mass.Kilogram * 0);
 
             p.Material = new Material() { Code = "1.052", Density = Density.KilogramPerCubicMetre * 8000 };
 
@@ -76,10 +90,13 @@ namespace ReactiveShopCore.Test
         [TestMethod]
         public void TestCout()
         {
-            Assert.IsTrue( PrepareData());
-            using (var ctx=new ShopDataContext())
+
+
+            using (var ctx = Shop)
             {
-                var p=ctx.Products.Where(pp=>pp.Code=="code1").FirstOrDefault();
+                var p = ctx.Products.Where(pp => pp.Code == "code1").FirstOrDefault();
+                Assert.IsNotNull(p);
+                Assert.IsTrue(p.CoutMainOeuvre.Value == 0);
                 p.CoutMainOeuvre = Currency.Euro * 15;
 
                 Assert.AreEqual(p.CoutTotal, p.CoutMainOeuvre);
@@ -93,31 +110,11 @@ namespace ReactiveShopCore.Test
                 var pc = ctx.Products.Where(pp => pp.Code == "code1").FirstOrDefault();
                 Assert.AreEqual(p.CoutMainOeuvre.Value, 15);
             }
-            
-           
+
+
         }
 
 
-        private bool PrepareData()
-        {
-            using (var ctx = new ShopDataContext())
-            {
-                for (int i = 1; i <= 20; i++)
-                    ctx.Products.Add(new Product() { Societe = "001", Code = $"code{i}", FullDescription = $"FullDesc{i}",Complementary=$"Comp{i}" ,CreatedBy="jc"});
 
-
-
-                try
-                {
-                    ctx.SaveChanges();
-                }catch(DbEntityValidationException ex)
-                {
-                    ex.EntityValidationErrors.ToList().ForEach(e => e.ValidationErrors.ToList().ForEach(ee => Trace.WriteLine($"{ee.PropertyName}:{ ee.ErrorMessage}")));
-                    return false;
-                }
-                return true;
-                
-            }
-        }
     }
 }
