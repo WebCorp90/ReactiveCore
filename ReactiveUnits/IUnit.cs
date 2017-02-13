@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-
+#if !CORE
+using System.ComponentModel.DataAnnotations.Schema;
+#endif
 namespace Webcorp.unite
 {
 
@@ -29,8 +31,10 @@ namespace Webcorp.unite
 #pragma warning disable CS0660 // Le type définit l'opérateur == ou l'opérateur != mais ne se substitue pas à Object.Equals(object o)
 #if !CORE
     [Serializable]
+    [ComplexType]
 #endif
-    public abstract class Unit<T> :  IUnit<T>
+
+    public abstract class Unit<T> : IUnit<T>
 #pragma warning restore CS0661 // Le type définit l'opérateur == ou l'opérateur != mais ne se substitue pas à Object.GetHashCode()
 #pragma warning restore CS0660 // Le type définit l'opérateur == ou l'opérateur != mais ne se substitue pas à Object.Equals(object o)
     {
@@ -53,6 +57,8 @@ namespace Webcorp.unite
         public abstract IUnit MultiplyBy(double x);
 
         public abstract string ToString(string format, IFormatProvider formatProvider);
+
+        
 
         public static bool operator >(Unit<T> a1, Unit<T> a2)
         {

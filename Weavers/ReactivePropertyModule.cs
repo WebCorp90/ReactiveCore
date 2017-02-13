@@ -5,6 +5,7 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
 using System.Diagnostics;
 using MyWeaver.Fody;
+using ReactiveHelpers.Core;
 
 namespace PropertyChangedCore.Fody
 {
@@ -43,7 +44,7 @@ namespace PropertyChangedCore.Fody
             Weaver.LogInfo($"{helpers.Name} {helpers.Version}");
             var reactiveObject = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.REACTIVE_OBJECT, Weaver.ModuleDefinition, reactiveCore);
             var targetTypes = Weaver.ModuleDefinition.GetAllTypes().Where(x => x.BaseType != null && reactiveObject.IsAssignableFrom(x.BaseType)).ToArray();
-            Weaver.LogInfo(string.Join<TypeDefinition>(",", targetTypes));
+            //Weaver.LogInfo(string.Join<TypeDefinition>(",", targetTypes));
             var reactiveObjectExtensions = new TypeReference(PropertyChangedCoreWeaver.REACTIVECORE_ASSEMBLY, PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS, Weaver.ModuleDefinition, reactiveCore).Resolve();
             if (reactiveObjectExtensions == null)
                 throw new Exception($"{PropertyChangedCoreWeaver.IREACTIVE_OBJECT_EXTENTIONS} is null");
@@ -52,20 +53,31 @@ namespace PropertyChangedCore.Fody
             if (raiseAndSetIfChangedMethod == null)
                 throw new Exception($"{PropertyChangedCoreWeaver.RAISE_AND_SET_IF_CHANGE_METHOD} is null");
 
-            var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY,  PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE , helpers);
+            var reactiveAttribute =ModuleDefinition.Import(typeof(ReactiveAttribute));
+           // dataMemberDef = dataMemberRef.Resolve();
+
+            //var reactiveAttribute = Weaver.ModuleDefinition.FindType(PropertyChangedCoreWeaver.HELPERS_ASSEMBLY,  PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE , helpers);
             if (reactiveAttribute == null)
                 throw new Exception($"{PropertyChangedCoreWeaver.REACTIVE_ATTRIBUTE} is null");
-
+            LogInfo($" REactive Attribute fullname {reactiveAttribute.FullName}");
             foreach (var targetType in targetTypes)
             {
-                foreach (var property in targetType.Properties.Where(x => x.IsDefined(reactiveAttribute)).ToArray())
+                targetTypes.ToList().ForEach(e => targetType.Properties.ToList().ForEach(p=> LogInfo(p.FullName)));
+                var properties = targetType.Properties.Where(x => x.IsDefined(reactiveAttribute)).ToArray();
+                foreach (var property in properties)
                 {
+                    LogInfo(property.Name);
+                   /* if(property.CustomAttributes.Where(x => { LogInfo(x.Constructor.DeclaringType.FullName);  return x.Constructor.DeclaringType.FullName == reactiveAttribute.FullName; }).FirstOrDefault() == null)
+                    {
+                        LogInfo($"{property.Name} has no Custom Attribute {reactiveAttribute.Name}");
+                        continue;
+                    }*/
                     if (property.SetMethod == null)
                     {
                         Weaver.LogError($"Property {property.DeclaringType.FullName}.{property.Name} has no setter, therefore it is not possible for the property to change, and thus should not be marked with [Reactive]");
                         continue;
                     }
-
+                   
                     // Declare a field to store the property value
                     var field = new FieldDefinition($"${property.Name}"  , FieldAttributes.Private, property.PropertyType);
                     targetType.Fields.Add(field);

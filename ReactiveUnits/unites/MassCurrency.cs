@@ -153,7 +153,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("MassCurrency Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

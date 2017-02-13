@@ -215,7 +215,7 @@ namespace ReactiveShop.Core.Domain.Catalog
         /// </summary>
         [DataMember]
         [Reactive]
-        public Mass Mass { get; set; }
+        public Mass Mass { get; set; } = new Mass();
 
         /// <summary>
         /// Gets or set if the mass must be auto calculated from length/width/Thickness/Density
@@ -229,21 +229,21 @@ namespace ReactiveShop.Core.Domain.Catalog
         /// </summary>
         [DataMember]
         [Reactive]
-        public Length Length { get; set; }
+        public Length Length { get; set; } = new Length();
 
         /// <summary>
         /// Gets or set Width of the product
         /// </summary>
         [DataMember]
         [Reactive]
-        public Length Width { get; set; }
+        public Length Width { get; set; } = new Length();
 
         /// <summary>
         /// Gets or set the thickness of the product
         /// </summary>
         [DataMember]
         [Reactive]
-        public Length Thickness { get; set; }
+        public Length Thickness { get; set; } = new Length();
 
         /// <summary>
         /// Gets or sets the material of the product
@@ -257,7 +257,7 @@ namespace ReactiveShop.Core.Domain.Catalog
         /// </summary>
         [DataMember]
         [Reactive]
-        public MassLinear MassLinear { get; set; }
+        public MassLinear MassLinear { get; set; } = new MassLinear();
 
         #region STOCKS
         /// <summary>
@@ -316,23 +316,23 @@ namespace ReactiveShop.Core.Domain.Catalog
         #region COUTS
         [DataMember]
         [Reactive]
-        public Currency CoutPreparation { get; set; }
+        public Currency CoutPreparation { get; set; } = new Currency();
         [DataMember]
         [Reactive]
-        public Currency CoutMatierePremiere { get; set; }
+        public Currency CoutMatierePremiere { get; set; } = new Currency();
         [DataMember]
         [Reactive]
-        public Currency CoutMainOeuvre { get; set; }
+        public Currency CoutMainOeuvre { get; set; } = new Currency();
         [DataMember]
         [Reactive]
-        public Currency CoutSousTraitance { get; set; }
+        public Currency CoutSousTraitance { get; set; } = new Currency();
         [DataMember]
         [Reactive]
-        public Currency CoutFraisGeneraux { get; set; }
+        public Currency CoutFraisGeneraux { get; set; } = new Currency();
 
         [DataMember]
         [Reactive]
-        public Currency CoutTotal { get; set; }
+        public Currency CoutTotal { get; set; } = new Currency();
 
 
         public string _CoutMo{ get { return CoutMainOeuvre.ToString(); }  set { CoutMainOeuvre = new Currency(value); } }

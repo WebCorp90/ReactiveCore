@@ -78,6 +78,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ReactiveHelpers.NET461\ReactiveHelpers.NET461.csproj">
+      <Project>{f5221828-412c-470f-89ad-b8e0259d089f}</Project>
+      <Name>ReactiveHelpers.NET461</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ReactiveUnits.NET461\ReactiveUnits.NET461.csproj">
       <Project>{cc9b3b19-d634-483b-9db9-33950a14db2c}</Project>
       <Name>ReactiveUnits.NET461</Name>

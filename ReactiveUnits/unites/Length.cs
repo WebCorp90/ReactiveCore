@@ -333,7 +333,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("Length Doesn't support base value changing");
+				this.value = value;
 			}
 
         }
@@ -474,12 +474,7 @@ namespace Webcorp.unite
         /// </returns>
         public static Length operator +(Length x, Length y)
         {
-            double? value = 0;
-            value = x?.Value ?? value;
-            value = value + (y?.Value ?? 0);
-           
-            return new Length(value ?? 0);
-            //return new Length(x.value + y.value);
+            return new Length(x.value + y.value);
         }
 
         /// <summary>
@@ -666,12 +661,7 @@ namespace Webcorp.unite
         /// </returns>
         public static Length operator -(Length x, Length y)
         {
-            double? value = 0;
-            value = x?.Value ?? value;
-            value = value - (y?.Value ?? 0);
-
-            return new Length(value ?? 0);
-            //return new Length(x.value - y.value);
+            return new Length(x.value - y.value);
         }
 
         /// <summary>

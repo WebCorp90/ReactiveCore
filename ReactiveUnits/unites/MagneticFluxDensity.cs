@@ -138,7 +138,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("MagneticFluxDensity Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

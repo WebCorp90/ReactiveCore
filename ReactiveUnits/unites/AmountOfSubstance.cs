@@ -138,7 +138,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("AmountOfSubstance Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

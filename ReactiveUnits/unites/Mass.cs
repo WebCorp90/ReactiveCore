@@ -228,7 +228,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("Mass Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

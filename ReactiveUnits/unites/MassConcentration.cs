@@ -213,7 +213,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("MassConcentration Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

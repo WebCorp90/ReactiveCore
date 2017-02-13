@@ -198,7 +198,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("TypographicLength Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

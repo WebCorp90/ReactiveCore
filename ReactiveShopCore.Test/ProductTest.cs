@@ -44,7 +44,7 @@ namespace ReactiveShopCore.Test
             p.Length = Length.Millimetre * 1200;
 
             Assert.IsFalse(p.MassAutoCalculated);
-            Assert.IsNull(p.Mass);
+            Assert.IsNotNull(p.Mass);
 
             p.MassAutoCalculated = true;
             p.Length = Length.Millimetre * 1300;
@@ -84,6 +84,10 @@ namespace ReactiveShopCore.Test
 
                 Assert.AreEqual(p.CoutTotal, p.CoutMainOeuvre);
 
+                p.CoutMainOeuvre = Currency.FrancSuisse * 10;
+                Assert.AreEqual(p.CoutTotal, p.CoutMainOeuvre);
+
+                p.CoutMainOeuvre = Currency.Euro * 15;
                 ctx.SaveChanges();
 
                 var pc = ctx.Products.Where(pp => pp.Code == "code1").FirstOrDefault();

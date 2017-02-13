@@ -17,22 +17,7 @@ namespace MyWeaver.Fody
         public const string REACTIVE_ATTRIBUTE = "ReactiveAttribute";
         public const string OBSERVABLE_AS_PROPERTY_ATTRIBUTE = " ObservableAsPropertyAttribute";
         public const string DATAMEMBER_ATTRIBUTE = "DataMemberAttribute";
-        /*public BaseWeaver()
-        {
-            Initialize();
-        }
 
-        protected virtual void Initialize()
-        {
-            LogInfo = s => { };
-            LogError = s => { };
-            LogWarning = s => { };
-            LogDebug = s => { };
-        }
-
-        public virtual void Execute() { }
-
-        */
         
 
         

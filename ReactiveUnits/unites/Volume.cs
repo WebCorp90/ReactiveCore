@@ -213,7 +213,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("Volume Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

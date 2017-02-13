@@ -198,7 +198,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("ElectricConductance Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

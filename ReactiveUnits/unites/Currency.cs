@@ -277,11 +277,7 @@ namespace Webcorp.unite
         /// </returns>
         public static Currency operator +(Currency x, Currency y)
         {
-            double? value = 0;
-            value = x?.Value ?? value;
-            value = value + (y?.Value??0);
-            //return new Currency(x.value + y.value);
-            return new Currency(value??0);
+            return new Currency(x.value + y.value);
         }
 
         /// <summary>

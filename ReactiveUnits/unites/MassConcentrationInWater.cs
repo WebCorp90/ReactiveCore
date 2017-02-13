@@ -168,7 +168,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("MassConcentrationInWater Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

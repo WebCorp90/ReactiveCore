@@ -153,7 +153,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("DynamicViscosity Doesn't support base value changing");
+				this.value = value;
 			}
 
         }

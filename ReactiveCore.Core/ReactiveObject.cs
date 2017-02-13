@@ -42,7 +42,7 @@ namespace ReactiveCore
         [IgnoreDataMember]
         public IObservable<Exception> ThrownExceptions { get { return this.getThrownExceptionsObservable(); } }
 
-        protected ReactiveObject()
+        public ReactiveObject()
         {
         }
 

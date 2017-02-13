@@ -153,7 +153,7 @@ namespace Webcorp.unite
             }
 
 			set{
-				throw new NotSupportedException("FuelEconomy Doesn't support base value changing");
+				this.value = value;
 			}
 
         }
