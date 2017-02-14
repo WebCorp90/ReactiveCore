@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ReactiveHelpers.Core
+namespace ReactiveHelpers
 {
     public static class FileExtensions
     {

@@ -85,6 +85,9 @@
     <Compile Include="..\ReactiveDbCore.Core\Interfaces.cs">
       <Link>Interfaces.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveDbCore.Core\IReactiveDbContext.cs">
+      <Link>IReactiveDbContext.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveDbCore.Core\IReactiveDbObject.cs">
       <Link>IReactiveDbObject.cs</Link>
     </Compile>

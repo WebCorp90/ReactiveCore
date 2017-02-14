@@ -4,7 +4,8 @@
     "Microsoft.EntityFrameworkCore": "1.1.0",
     "NETStandard.Library": "1.6.1",
     "PropertyChanged.Core.Helpers": "1.0.0-*",
-    "ReactiveCore.Core": "1.0.0-*"
+    "ReactiveCore.Core": "1.0.0-*",
+    "ReactiveHelpers.Core": "1.0.0-*"
   },
   "frameworks": {
     "netstandard1.6": {

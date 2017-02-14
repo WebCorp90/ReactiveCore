@@ -1,9 +1,11 @@
 ﻿#if CORE
 using Microsoft.EntityFrameworkCore;
+
 #else
 using System.Data.Entity;
 #endif
 using ReactiveCore;
+using ReactiveHelpers.Core;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +14,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
-using ReactiveHelpers.Core;
 
 namespace ReactiveDbCore
 {
@@ -21,7 +22,7 @@ namespace ReactiveDbCore
     /// <see cref="https://github.com/NickStrupat/EntityFramework.Triggers"/>
     /// Add some functionnality for triggering events on saving processus
 	/// </summary>
-    public class ReactiveDbContext : DbContext, IReactiveObject
+    public class ReactiveDbContext : DbContext,IReactiveDbContext
     {
         #region fields
         ISubject<IReactiveDbContextEventArgs> errorSubject;

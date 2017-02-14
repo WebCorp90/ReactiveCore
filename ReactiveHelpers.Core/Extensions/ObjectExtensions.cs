@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ReactiveHelpers.Core
+namespace ReactiveHelpers
 {
     public static class ObjectExtensions
     {

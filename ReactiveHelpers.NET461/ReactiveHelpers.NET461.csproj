@@ -85,6 +85,15 @@
     <Compile Include="..\ReactiveHelpers.Core\Attributes\ReactiveDependencyAttribute.cs">
       <Link>Attributes\ReactiveDependencyAttribute.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Collections\Multimap.cs">
+      <Link>Collections\Multimap.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Extensions\CollectionExtensions.cs">
+      <Link>Extensions\CollectionExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Extensions\ConversionExtensions.cs">
+      <Link>Extensions\ConversionExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\EnumerableExtensions.cs">
       <Link>Extensions\EnumerableExtensions.cs</Link>
     </Compile>
@@ -131,6 +140,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Utilities\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

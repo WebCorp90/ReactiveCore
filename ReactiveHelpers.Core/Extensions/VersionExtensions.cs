@@ -1,10 +1,11 @@
-﻿using System;
+﻿using ReactiveHelpers.Core;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ReactiveHelpers.Core
+namespace ReactiveHelpers
 {
     public static class VersionExtensions
     {

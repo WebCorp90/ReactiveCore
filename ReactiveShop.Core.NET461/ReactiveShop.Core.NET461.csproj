@@ -74,6 +74,9 @@
     <Compile Include="..\ReactiveShop.Core\BaseEntity.cs">
       <Link>BaseEntity.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveShop.Core\Data\IRepository.cs">
+      <Link>Data\IRepository.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveShop.Core\Domain\Catalog\Material.cs">
       <Link>Domain\Catalog\Material.cs</Link>
     </Compile>

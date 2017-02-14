@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.Contracts;
 
-namespace ReactiveHelpers.Core
+namespace ReactiveHelpers
 {
 
     public static class ServiceExtensions
