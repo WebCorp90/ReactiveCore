@@ -9,8 +9,6 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace ReactiveHelpers
 {
@@ -424,7 +422,7 @@ namespace ReactiveHelpers
             return value + endWith;
         }
 
-        [DebuggerStepThrough]
+      /*  [DebuggerStepThrough]
         public static string UrlEncode(this string value)
         {
             return HttpUtility.UrlEncode(value);
@@ -453,7 +451,7 @@ namespace ReactiveHelpers
         public static string HtmlDecode(this string value)
         {
             return HttpUtility.HtmlDecode(value);
-        }
+        }*/
 
         /*[Obsolete("The 'removeTags' parameter is not supported anymore. Use the parameterless method instead.")]
         public static string RemoveHtml(this string source, ICollection<string> removeTags)
@@ -684,7 +682,7 @@ namespace ReactiveHelpers
         /// <param name="value">Name of the attribute.</param>
         /// <param name="name"></param>
         /// <param name="htmlEncode"></param>
-        [SuppressMessage("ReSharper", "StringCompareIsCultureSpecific.3")]
+      /*  [SuppressMessage("ReSharper", "StringCompareIsCultureSpecific.3")]
         public static string ToAttribute(this string value, string name, bool htmlEncode = true)
         {
             if (name.IsEmpty())
@@ -707,7 +705,7 @@ namespace ReactiveHelpers
                 name = name.Insert(4, "-");
 
             return string.Format(" {0}=\"{1}\"", name, htmlEncode ? HttpUtility.HtmlEncode(value) : value);
-        }
+        }*/
 
         /// <summary>Appends grow and uses delimiter if the string is not empty.</summary>
         [DebuggerStepThrough]

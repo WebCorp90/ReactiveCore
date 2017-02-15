@@ -4,7 +4,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
-
+#if CORE
+using System.Reflection;
+#endif
 namespace ReactiveHelpers.ComponentModel
 {
     [SuppressMessage("ReSharper", "TryCastAlwaysSucceeds")]

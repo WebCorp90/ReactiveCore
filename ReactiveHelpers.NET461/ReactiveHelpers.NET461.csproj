@@ -30,6 +30,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
       <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
       <Private>True</Private>
@@ -88,17 +92,59 @@
     <Compile Include="..\ReactiveHelpers.Core\Collections\Multimap.cs">
       <Link>Collections\Multimap.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\BooleanConverter.cs">
+      <Link>ComponentModel\TypeConversion\BooleanConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\DateTimeConverter.cs">
+      <Link>ComponentModel\TypeConversion\DateTimeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\EnumerableConverter.cs">
+      <Link>ComponentModel\TypeConversion\EnumerableConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\ITypeConverter.cs">
+      <Link>ComponentModel\TypeConversion\ITypeConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\NullableConverter.cs">
+      <Link>ComponentModel\TypeConversion\NullableConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\ProductBundleDataConverter.cs">
+      <Link>ComponentModel\TypeConversion\ProductBundleDataConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\ShippingOptionConverter.cs">
+      <Link>ComponentModel\TypeConversion\ShippingOptionConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\TimeSpanConverter.cs">
+      <Link>ComponentModel\TypeConversion\TimeSpanConverter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\TypeConverterAdapter.cs">
+      <Link>ComponentModel\TypeConversion\TypeConverterAdapter.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\TypeConverterBase.cs">
+      <Link>ComponentModel\TypeConversion\TypeConverterBase.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\ComponentModel\TypeConversion\TypeConverterFactory.cs">
+      <Link>ComponentModel\TypeConversion\TypeConverterFactory.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\CollectionExtensions.cs">
       <Link>Extensions\CollectionExtensions.cs</Link>
     </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\ConversionExtensions.cs">
       <Link>Extensions\ConversionExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Extensions\DateTimeExtensions.cs">
+      <Link>Extensions\DateTimeExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\EnumerableExtensions.cs">
       <Link>Extensions\EnumerableExtensions.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Extensions\ExceptionExtensions.cs">
+      <Link>Extensions\ExceptionExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\FileExtensions.cs">
       <Link>Extensions\FileExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Extensions\MiscExtensions.cs">
+      <Link>Extensions\MiscExtensions.cs</Link>
     </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\ObjectExtensions.cs">
       <Link>Extensions\ObjectExtensions.cs</Link>
@@ -108,6 +154,9 @@
     </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\StringExtensions.cs">
       <Link>Extensions\StringExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Extensions\TypeExtensions.cs">
+      <Link>Extensions\TypeExtensions.cs</Link>
     </Compile>
     <Compile Include="..\ReactiveHelpers.Core\Extensions\VersionExtensions.cs">
       <Link>Extensions\VersionExtensions.cs</Link>
@@ -127,11 +176,23 @@
     <Compile Include="..\ReactiveHelpers.Core\IModule.cs">
       <Link>IModule.cs</Link>
     </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Infrastructure\ApplicationException.cs">
+      <Link>Infrastructure\ApplicationException.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Infrastructure\Error.cs">
+      <Link>Infrastructure\Error.cs</Link>
+    </Compile>
     <Compile Include="..\ReactiveHelpers.Core\IPlugin.cs">
       <Link>IPlugin.cs</Link>
     </Compile>
     <Compile Include="..\ReactiveHelpers.Core\IPluginDescriptor.cs">
       <Link>IPluginDescriptor.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\RegularExpressions.cs">
+      <Link>RegularExpressions.cs</Link>
+    </Compile>
+    <Compile Include="..\ReactiveHelpers.Core\Utilities\CommonHelper.cs">
+      <Link>Utilities\CommonHelper.cs</Link>
     </Compile>
     <Compile Include="..\ReactiveHelpers.Core\VersionCompliance.cs">
       <Link>VersionCompliance.cs</Link>
@@ -141,9 +202,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utilities\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

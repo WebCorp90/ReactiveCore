@@ -27,7 +27,7 @@ namespace ReactiveShopCore.Test
         {
 
             for (int i = 1; i <= 20; i++)
-                this.Products.Add(new Product() { Societe = "001", Code = $"code{i}", FullDescription = $"FullDesc{i}", Complementary = $"Comp{i}", CreatedBy = "jc" });
+                this.Products.Add(new Product() { Societe = "001", Code = $"code{i}", FullDescription = $"FullDesc{i}", Complementaire = $"Comp{i}", CreatedBy = "jc" });
 
             try
             {

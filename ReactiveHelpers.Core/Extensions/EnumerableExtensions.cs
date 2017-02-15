@@ -7,8 +7,6 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Web;
 
 namespace ReactiveHelpers
 {
@@ -242,7 +240,7 @@ namespace ReactiveHelpers
             }
         }
 
-        /// <summary>
+       /* /// <summary>
         /// Builds an URL query string
         /// </summary>
         /// <param name="nvc">Name value collection</param>
@@ -279,7 +277,7 @@ namespace ReactiveHelpers
             }
 
             return sb.ToString();
-        }
+        }*/
 
         #endregion
     }

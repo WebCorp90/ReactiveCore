@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 #endif
 using Webcorp.unite;
 using System.Diagnostics;
+using ReactiveHelpers.Core.Attributes;
 
 namespace ReactiveShop.Core.Domain.Catalog
 {
@@ -73,6 +74,7 @@ namespace ReactiveShop.Core.Domain.Catalog
         [StringLength(24, MinimumLength = 3)]
         [Display(Name = "Product.Code")]
         [Reactive]
+        [Index("IX_PRODUCT_SOC_CODE_COMPL",1)]
         public string Code { get; set; }
 
         /// <summary>
@@ -81,7 +83,8 @@ namespace ReactiveShop.Core.Domain.Catalog
         [DataMember, Required(ErrorMessage = "Product.Complementary.Required")]
         [StringLength(6)]
         [Reactive]
-        public string Complementary { get; set; }
+        [Index("IX_PRODUCT_SOC_CODE_COMPL", 2)]
+        public string Complementaire { get; set; }
 
         /// <summary>
         /// Get or set Product Type

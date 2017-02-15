@@ -8,21 +8,21 @@ using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Reflection;
-
+using System.Collections.Generic;
 
 namespace ReactiveDbCore
 {
-    public class Repository<T> : IRepository<T> where T : ReactiveObject
+    public class Repository<TKey,T> : IRepository<TKey,T> where T : ReactiveDbObject
     {
 
         //[Index("IX_FirstAndSecond", 2, IsUnique = true)]
-        
-
 
 
         static Repository()
         {
             Key = ObjectMixins.GetKey<T>();
+            Indexes=ObjectMixins.GetIndexes<T>();
+
         }
         private ReactiveDbContext _context;
         private DbSet<T> _dbset;
@@ -38,6 +38,7 @@ namespace ReactiveDbCore
         protected DbSet<T> DbSet { get { return _dbset; } private set { Contract.Requires(value != null); _dbset = value; } }
 
         public static PropertyInfo Key { get; private set; }
+        public static Dictionary<string, Indexes> Indexes { get; private set; }
 
         public void Add(T entity)
         {
@@ -59,19 +60,19 @@ namespace ReactiveDbCore
             DbSet.Remove(entity);
         }
 
-        public void Delete<TKey>(TKey key)
+        public void Delete(TKey key)
         {
             Contract.Requires(key != null);
             Delete(Get(key));
         }
 
-        public T Get<TKey>(TKey key)
+        public T Get(TKey key)
         {
             Contract.Requires(key != null);
             return DbSet.SingleOrDefault(r => Key.GetValue(r).Equals(key));
         }
 
-        public Task< T> GetAsync<TKey>(TKey key)
+        public Task<T> GetAsync(TKey key)
         {
             Contract.Requires(key != null);
             return DbSet.SingleOrDefaultAsync(r => Key.GetValue(r).Equals(key));
@@ -89,20 +90,20 @@ namespace ReactiveDbCore
             Save();
         }
 
-        public async Task UpdateAsync()
+        public async Task<int> UpdateAsync()
         {
-            await SaveAsync();
+            return await SaveAsync();
         }
 
-        protected virtual void Save()
+        protected virtual int Save()
         {
-            Context.SaveChanges();
+            return Context.SaveChanges();
         }
 
-        protected virtual async Task SaveAsync()
+        protected virtual async Task<int> SaveAsync()
         {
             
-            await Context.SaveChangesAsync();
+            return await Context.SaveChangesAsync();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 using ReactiveDbCore;
 using ReactiveHelpers.Core;
+using ReactiveHelpers.Core.Attributes;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,7 +27,7 @@ namespace ReactiveShop.Core
         /// </summary>
 		[DataMember]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //[Reactive]
+        [Reactive]
         public int Id { get; set; }
 
 
@@ -35,7 +36,8 @@ namespace ReactiveShop.Core
         /// must be on three characters
         /// </summary>
         [DataMember,Required,StringLength(maximumLength:3,MinimumLength =3)]
-        //[Reactive]
+        [Reactive]
+        [Index]
         public string Societe { get; set; }
 
         /// <summary>

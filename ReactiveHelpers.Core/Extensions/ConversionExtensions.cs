@@ -11,6 +11,8 @@ using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Runtime.Serialization.Formatters;
 using ReactiveHelpers.ComponentModel;
+using ReactiveHelpers.Core.Utilities;
+using System.Security.Cryptography;
 #if CORE
 using System.Reflection;
 #endif
@@ -317,7 +319,7 @@ namespace ReactiveHelpers
 #endregion
 
 #region ByteArray
-
+/*
         /// <summary>
         /// Converts a byte array into an object.
         /// </summary>
@@ -333,7 +335,7 @@ namespace ReactiveHelpers
                 return new BinaryFormatter().Deserialize(stream);
             }
         }
-
+        */
         public static Stream ToStream(this byte[] bytes)
         {
             return new MemoryStream(bytes);
@@ -347,7 +349,7 @@ namespace ReactiveHelpers
         [DebuggerStepThrough]
         public static string Hash(this byte[] value, bool toBase64 = false)
         {
-            Guard.NotNull(value, nameof(value));
+            Contract.Requires<ArgumentNullException>(value != null, nameof(value));
 
             using (MD5 md5 = MD5.Create())
             {
@@ -414,7 +416,7 @@ namespace ReactiveHelpers
 
 #region Enumerable: Collections/List/Dictionary...
 
-        public static T ToObject<T>(this IDictionary<string, object> values) where T : class
+     /*   public static T ToObject<T>(this IDictionary<string, object> values) where T : class
         {
             return (T)values.ToObject(typeof(T));
         }
@@ -433,7 +435,7 @@ namespace ReactiveHelpers
             }
 
             return DictionaryConverter.SafeCreateAndPopulate(objectType, values);
-        }
+        }*/
 
 #endregion
 

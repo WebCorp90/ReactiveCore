@@ -9,7 +9,7 @@ namespace ReactiveShop.Core.Data
     /// <summary>
     /// Repository
     /// </summary>
-    public interface IRepository<T> where T:ReactiveDbObject
+    public interface IRepository<TKey,T> where T:ReactiveDbObject
     {
         /// <summary>
         /// Returns the queryable entity set for the given type {T}.
@@ -38,7 +38,7 @@ namespace ReactiveShop.Core.Data
         /// </summary>
         /// <param name="id">The id of the entity. This can also be a composite key.</param>
         /// <returns>The resolved entity</returns>
-        T GetById(object id);
+        T GetById(TKey id);
 
         /// <summary>
         /// Attaches an entity to the context
@@ -81,6 +81,12 @@ namespace ReactiveShop.Core.Data
         /// <param name="entity">An entity instance that should be deleted from the database.</param>
         /// <remarks>Implementors should delegate this to the current <see cref="IDbContext" /></remarks>
         void Delete(T entity);
+
+        /// <summary>
+        /// Marks an existing entity to be deleted from the store.
+        /// </summary>
+        /// <param name="key">An entity instance that should be deleted from the database.</param>
+        void Delete(TKey key);
 
         /// <summary>
         /// Marks existing entities to be deleted from the store.
